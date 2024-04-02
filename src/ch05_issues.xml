@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch05_issues">
+<title>未解决的问题</title>
+<abstract>
+    <para>此处记录Docbook中的一些还没有解决的问题</para>
+    <para>有人知道解决办法的话，希望可以<link xl:href="http://www.crifan.com/about/me/">联系并告知我</link>，谢谢。</para>
+</abstract>
+
+    <sect1 xml:id="unknown_code_syntax_highlight"><title>支持各种语言的代码的语法高亮</title>
+        <para>折腾过程参见：<link xl:href="http://www.crifan.com/docbook_highlight_code_for_programlisting_using_xsltproc_fop/">【已放弃】给Docbook中代码programlisting实现高亮显示</link></para>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="unknown_zhcn_hypernate"><title>中文hypernate断字</title>
+        <para>折腾过程参见：<link xl:href="http://www.crifan.com/single_line_long_char_exceed_margin_in_programlisting/">【部分解决】docbook的programlisting中，单行的连续字符太长，超出pdf边界</link>和<link xl:href="http://www.crifan.com/docbook_programlisting_single_line_code_too_long_exceed_page_width_not_show/">【已解决】Docbook生成PDF中，程序代码programlisting中单行代码太长，超出页面宽度，无法显示</link></para>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="unknown_callout_co_re_number"><title>给callout的co重新编号</title>
+        <para><link xl:href="http://www.crifan.com/docbook_callout_co_renumber_reindex/">【未解决】docbook中给callout的co重新编号</link></para>
+        <para></para>
+    </sect1>
+
+</chapter>

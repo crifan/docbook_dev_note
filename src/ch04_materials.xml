@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch04_materials">
+<title>Docbook参考资料</title>
+<abstract></abstract>
+
+<sect1 xml:id="docbook_related_download"><title>Docbook相关的资源和工具下载</title>
+    <itemizedlist>
+        <listitem>docbook的样式表stylesheet
+            <para><link xl:href="http://sourceforge.net/projects/docbook/files/">Docbook Sourceforge</link></para>
+            <para>想要下载Docbook的相关的stylesheet，即各种xsl配置文件的话，可以去此docbook官网下载页面去下载</para>
+            <para>包括各种版本，及最新版本的的，docbook-xsl-ns</para>
+        </listitem>
+        <listitem>搭建windows下的docbook开发环境所需要的各种工具
+            <para>之前最早的找到的是zlatkovic的下载页面：<link xl:href="ftp://ftp.zlatkovic.com/pub/libxml/" /></para>
+            <para>后来发现其还有个64bit的子页面，包含更多的，更新版本的，编译好的，win32的，二进制包，供下载：</para>
+            <para><link xl:href="ftp://ftp.zlatkovic.com/pub/libxml/64bit/" /></para>
+            <para>之后，又发现，其中部分的内容，xml官网也已经提供下载了：</para>
+            <para><link xl:href="http://xmlsoft.org/sources/win32/" /></para>
+            <para></para>
+        </listitem>
+    </itemizedlist>
+</sect1>
+
+<sect1 xml:id="intro_explain_docbook_materials"><title>关于对于Docbook的介绍和解释方面的资料</title>
+    <orderedlist>
+        <listitem>Docbook的HelloWord
+            <para><link xl:href="http://www.worldhello.net/doc/docbook_howto/docbook_howto.htm">单个HTML页面的版本</link></para>
+            <para><link xl:href="http://www.worldhello.net/doc/docbook_howto/index.html">多个HTML页面的版本</link></para>
+            <para><link xl:href="http://www.worldhello.net/doc/docbook_howto/mindmap/docbook.mm.htm">mindmap版本</link></para>
+            <para>特点：入门参考经典资料</para>
+            <para>算是在Docbook的中文方面，最早的，解释的最全的资料了。</para>
+        </listitem>
+        
+        <listitem><link xl:href="http://wiki.ubuntu.org.cn/DocBookGuide">Ubuntu Docbook Wiki</link>
+            <para>特点:中文,解释的很清晰易懂.</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.turbolinux.com.cn/turbo/wiki/doku.php?id=docbook">Docbook简介 by 熊 伟</link><warning>此网站会被赛门铁克检测出病毒</warning>
+            <para>特点：内容不多，但是解释的深入浅出</para>
+        </listitem>
+        
+        <listitem><link xl:href="http://i.linuxtoy.org/docs/guide/ch27.html">开源世界旅行手册 之 Docbook指南</link>
+            <para>特点：清晰明了。东西概括得很好，尤其是很多基本概念，解释的到位。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.blogjava.net/hengheng123456789/archive/2007/09/03/142345.html">Docbook Beginning</link>
+            <para>特点：解释的简洁易懂</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.vogella.com/articles/DocBook/article.html#xinclude">DocBook - Tutorial by Lars Vogel</link>
+            <para>特点：老外写的，基于Eclipse搭建的环境，内容很新，更新很及时。目前最近的更新是2012.07.02</para>
+            <para>而且还有国人帮忙翻译了一下：<link xl:href="http://www.blogjava.net/antony9/archive/2011/08/07/355908.html">DocBook与Eclipse - 教程</link></para>
+        </listitem>
+    </orderedlist>
+</sect1>
+
+<sect1 xml:id="docbook_refer_materials"><title>关于对于Docbook的开发过程中可以参考和查阅的资料</title>
+    <orderedlist>
+        <listitem><link xl:href="http://www.sagehill.net/docbookxsl/index.html">DocBook XSL: The Complete Guide – Fourth Edition – by Bob Stayton</link>
+            <para>特点：最权威解释的。</para>
+            <para>关于docbook的最权威的，官网的教程。</para>
+            <para>有任何问题，上去找，一般都可以找到答案或参考。</para>
+        </listitem>
+        
+        <listitem><link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/index.html">DocBook XSL Stylesheets: Reference Documentation</link>
+            <para>特点：参数大全</para>
+            <para>关于各种输出格式，HTML，FO（PDF），manpage，website等等的参数方面，有哪些参数，具体如何配置，都可以去这里找到。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://learn.akae.cn/media/index.html">Linux C编程一站式学习</link>
+            <para>特点：（除了本身教程写的好之外，）docbook的xml源码可下载供参考</para>
+            <para>关于C编程的概念和知识，解释的很透彻，值得一看。</para>
+            <para>除了教程写的很有价值，其还把docbook的xml源码也公开了，可下载做参考。</para>
+            <para>相应html也可打包下载。</para>
+            <para>所以很适合，最开始写docbook源码的时候，做为参考代码。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.docbook.org/tdg5/en/html/docbook.html">DocBook 5: The Definitive Guide by Norman Walsh</link>
+            <para>特点：Norman Walsh写的，最权威的关于docbook5的参考资料</para>
+            <para>放在后面介绍，并不代表不重要。只是因为是英文写的，不适合做入门资料。</para>
+            <para>适合当参考书，有需要的时候去找相关内容再细看。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://blog.csdn.net/tanghw/article/details/fop_pdf_normal">DocBook 5 快速起步教程 by tanghw</link>
+            <para>特点：入门的参考教程</para>
+            <para>解释的很详细，适合入门者。东西解释的够全，很多知识点都值得参考参考。</para>
+            <para>只不过其搭建环境是Mac，不是很多人常用的Windows。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.study-area.org/tips/docw/docwrite.html">DocBook 文件寫作入門 by 老貢生</link>
+            <para>特点：部分内容可做参考</para>
+            <para>台湾人写的。解释的比较详细。等遇到相关知识，也许可以做参考。</para>
+        </listitem>
+
+        <listitem><link xl:href="https://supportweb.cs.bham.ac.uk/documentation/tutorials/docsystem/build/tutorials/docbooksys/segmentedhtml/index.html">Installing And Using An XML/SGML DocBook Editing Suite by Ashley J.S Mills</link>
+            <para>特点：很多例子，还是可以参考参考的。而且内容也很全面，从环境搭建到例子，全部都有。还介绍了用各种工具，转换成各种不同的格式的用法。</para>
+            <para></para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.vogella.com/articles/DocBook/article.html">DocBook – Tutorial by Lars Vogel</link>
+            <para>简单介绍了如何写docbook，其中有关于用Eclipse平台的方法。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://nwalsh.com/docbook/procdiagram/xmlsgmlpub.png">一张图片总结了Docbook生成各种格式的途经</link>
+            <para>这里一张图片，就总结了，关于Docbook的各种方法，生成各种格式的文件。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.liaojl.com/docbook/programming/docbook/docbook-build-reference.html">DOCBOOK编译环境参考手册 by 廖佳亮</link>
+            <para>中文的docbook的教程，写的还不错，有空可以参考参考。</para>
+        </listitem>
+
+        <listitem><link xl:href="http://www.dpawson.co.uk/docbook/">Docbook Frequently Asked Questions</link>
+            <para>Docbook的FAQ</para>
+            <para>里面详细介绍了，各种常见问题。</para>
+            <para>个人觉得比较有帮助的有：</para>
+            <para><link xl:href="http://www.dpawson.co.uk/docbook/tools.html">Docbook tools</link></para>
+            <para>其中记录了，关于Docbook相关的一些工具，比如xsltproc等相关的问题和解决办法</para>
+        </listitem>
+
+        <listitem><link xl:href="http://docbook.sourceforge.net/">The Docbook Project</link>
+            <para>Docbook的主页</para>
+            <para>算是Docbook的入口了，想要找一切关于Docbook的东西，都可以先去那里看看，说不定会有意外发现。</para>
+            <para></para>
+        </listitem>
+
+        <listitem>关于Docbook中Table的一些资料
+            <para>尤其是DocBook的表格CALS和HTML的表格的比较，很值得看看：</para>
+            <para><link xl:href="http://www.sagehill.net/docbookxsl/Tables.html">Comparison of CALS and HTML tables</link></para>
+            <para>其中，也有关于表格中列的宽度的介绍：</para>
+            <para><link xl:href="http://www.sagehill.net/docbookxsl/ColumnWidths.html">Column widths</link></para>
+        </listitem>
+
+        <listitem>关于如何添加新的字体
+            <para>之前别的教程中，最开始部分介绍的关于添加字体的内容，估计就是参考官网的这部分的解释：</para>
+            <para><link xl:href="http://www.sagehill.net/docbookxsl/AddFont.html">Chapter 13. Print customizations – Adding a font</link></para>
+            <para></para>
+        </listitem>
+
+        <listitem>关于在生成对应的HTML或者pdf的时候，需要按照自己的需要，配置输出的效果
+            <para>主要分两种方法，一种是写对应的xsl配置内容，放到自己的xsl文件中去。</para>
+            <para>另外一种就是使用相应的参数控制。</para>
+            <para>对应的这些参数有哪些，以及具体含义，在这里可以找到（注：此处是用的xsl是docbook-xsl-ns-1.76.1）：</para>
+            <para><link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/index.html">DocBook XSL Stylesheets: Reference Documentation</link></para>
+            <para>（也可以下载其<link xl:href="http://docbook.sourceforge.net/release/xsl/current/doc/reference.pdf">pdf版本</link>，留着当做参考书）</para>
+            <para>其中，</para>
+            <para>对于HTML的参数都在这里：<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/html/index.html">1. HTML Parameter Reference</link></para>
+            <para>对于（用fo生成的）PDF的参数控制，都在这里：<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/fo/index.html">2. FO Parameter Reference</link></para>
+            <para>关于如何使用这些参数，可以参考一些相关的帖子：</para>
+            <para>ulink.show：<link xl:href="http://www.crifan.com/make_http_link_address_not_show_in_pdf_of_docbook/">【已解决】去掉docbook中输出的pdf中，除了带链接的文字之外的那个链接地址</link></para>
+            <para>fop1.extensions：<link xl:href="http://www.crifan.com/remove_indent_of_content_and_add_bookmark_for_docbook_pdf/">【已解决】Docbook的pdf，去除正文对于标题的缩进indent + 【顺带实现】给docbook的pdf添加bookmark书签的功能</link></para>
+        </listitem>
+
+        <listitem>想要给pdf添加书签bookmark，以及支持更多种图片的话。
+            <para>那么可以在使用xsltproc的时候，添加对应的参数即可。</para>
+            <para>对于使用fop的话：</para>
+            <para>如果是用的0.20.5或更早的版本，参考这里：<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/fo/fop.extensions.html">Processor Extensions – fop.extensions</link>添加这个参数：<programlisting>--stringparam fop.extensions 1</programlisting></para>
+            <para>如果是用的0.90及更新的版本，参考这里：<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/fo/fop1.extensions.html">Processor Extensions – fop1.extensions</link>添加这个参数：<programlisting>--stringparam fop1.extensions 1</programlisting></para>
+            <para>我现在所用的fop是1.0的，所以用的是fop1.extensions。</para>
+        </listitem>
+
+        <listitem>参数配置，可以通过传递--stringparam给xsltproc，也可以通过xsl:param写入到自己的xsl配置文件中
+            <para>折腾其他参数的过程中，无意间看到：</para>
+            <para><link xl:href="http://blog.donews.com/limodou/archive/2004/04/01/9917.aspx">使用FOP将中文DocBook xml转换成pdf的实现记录</link></para>
+            <para>中是将参数写成这样的：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name=”body.font.family”>simsun</xsl:param>
+<xsl:param name=”monospace.font.family”>simsun</xsl:param>
+<xsl:param name=”title.font.family”>simhei</xsl:param>
+<xsl:param name=”saxon.character.representation” select=”‘native’”/>
+<xsl:param name=”admon.graphics” select=”1″/>
+<xsl:param name=”section.autolabel” select=”1″/>
+<xsl:param name=”section.label.includes.component.label” select=”1″/>
+<xsl:param name=”table.borders.with.css” select=”1″/>
+<xsl:param name=”use.extensions” select=”1″/>
+<xsl:param name=”tablecolumns.extension” select=”0″/>
+<xsl:param name=”callout.unicode” select=”1″/>
+<xsl:param name=”callout.unicode.start.character” select=”10102″></xsl:param>
+<xsl:param name=”variablelist.as.blocks” select=”1″></xsl:param>
+<xsl:param name=”callout.graphics” select=”0″/>
+<xsl:param name=”fop.extensions” select=”1″/>
+<xsl:param name=”hyphenate”>false</xsl:param>
+<xsl:param name=”l10n.gentext.default.language” select=”‘zh’”/>
+<xsl:param name=”paper.type” select=”‘A4′”/>
+<xsl:param name=”draft.mode” select=”‘no’”/>
+<xsl:param name=”generate.toc”>
+ ]]>
+            </programlisting>
+            <para>而与此相对，我之前都是写到–stringparam中的，所以，将原先的命令：</para>
+            <screen>xsltproc.exe --stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam bibliography.numbered 1 --stringparam ulink.show 1 --stringparam ulink.footnotes 1 --stringparam table.cell.border.color green --stringparam table.frame.border.thickness 2pt --stringparam fop1.extensions 1 --stringparam body.start.indent 0pt --xinclude -o ../output/fo/MPEG_VBR.fo /home/CLi/develop/docbook/config/docbook-xsl-ns-1.76.1/fo/docbook_crl.xsl MPEG_VBR.xml</screen>
+            <para>转化为：</para>
+            <screen>xsltproc.exe --xinclude -o ../output/fo/MPEG_VBR.fo /home/CLi/develop/docbook/config/docbook-xsl-ns-1.76.1/fo/docbook_crl.xsl MPEG_VBR.xml</screen>
+            <para>加上docbook_crl.xsl中的相关配置：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="admon.graphics" select="1"/>
+<xsl:param name="section.autolabel" select="1"/>
+<xsl:param name="section.label.includes.component.label" select="1"/>
+<xsl:param name="bibliography.numbered" select="1"/>
+<xsl:param name="ulink.show" select="1"/>
+<xsl:param name="ulink.footnotes" select="1"/>
+<xsl:param name="table.cell.border.color">green</xsl:param>
+<xsl:param name="table.frame.border.thickness">2pt</xsl:param>
+<xsl:param name="fop1.extensions">1</xsl:param>
+<xsl:param name="body.start.indent">0pt</xsl:param>
+ ]]>
+            </programlisting>
+            <para>这样，每次就不用输入那么多的配置参数了。</para>
+            <para>而需要额外的参数配置，也就都可以写到xsl文件中了。</para>
+            <para>此时，也才理解，原来<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/index.html">DocBook XSL Stylesheets: Reference Documentation</link></para>
+            <para>中的HTML和FO（PDF）的那么多参数，每个都有个语法解释，比如：<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/html/table.cell.border.color.html">table.cell.border.color</link>中的：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="table.cell.border.color"></xsl:param>
+ ]]>
+            </programlisting>
+            <para>指的就是，将此配置，写入到xsl文件中。而之前一直都不知道，都傻傻地加入到xsltproc的参数中去了。</para>
+        </listitem>
+
+        <listitem>对于catalog相关的知识，这一章有详细介绍：
+            <link xl:href="http://www.sagehill.net/docbookxsl/Catalogs.html">Part I. Setting up the tools – Chapter 5. XML catalogs</link>
+            <para>包括xsltproc中如何使用catalog的内容：</para>
+            <link xl:href="http://www.sagehill.net/docbookxsl/UseCatalog.html">Using catalogs with xsltproc</link>
+        </listitem>
+
+        <listitem>关于pdf实现一定输入效果，会涉及到xsl文件参数配置。
+            <para>这里：<link xl:href="http://www.dpawson.co.uk/docbook/styling/params.html">Docbook Stylsheet Customisation</link></para>
+            <para>列出了常见的一些配置参数，包括：章节编号的深度控制，给tip和warning加图片，给programlisting加背景色等。</para>
+        </listitem>
+        
+        <listitem>使用Docbook建网站
+            <para>如果想要通过Docbook建立网站，可以参考此文：<link xl:href="http://www.dpawson.co.uk/docbook/website/v5/">How to use the Docbook Website system</link></para>
+        </listitem>
+        
+        <listitem>基于Ant的Docbook开发环境：ant4docbook
+            <para>这里有专门的别人已经帮你搭建好的，基于ant的docbook的开发环境：<link xl:href="http://ant4docbook.sourceforge.net/index.html">ant4docbook</link></para>
+            <para>目前看到的已支持多种格式：<link xl:href="http://ant4docbook.sourceforge.net/docbook-html.html">html</link>，<link xl:href="http://ant4docbook.sourceforge.net/docbook-pdf.html">pdf</link>，<link xl:href="http://ant4docbook.sourceforge.net/docbook-epub.html">epub</link>，<link xl:href="http://ant4docbook.sourceforge.net/docbook-docx.html">docx</link>，<link xl:href="http://ant4docbook.sourceforge.net/docbook-rtf.html">rtf</link>，</para>
+        </listitem>
+        
+        <listitem>用Ant编译Docbook
+            <para>ant的官网中，也有介绍：<link xl:href="http://wiki.apache.org/ant/CreateDocBookDocumentation">Create DocBook XML based documentation with Ant</link></para>
+        </listitem>
+    </orderedlist>
+</sect1>  
+</chapter>

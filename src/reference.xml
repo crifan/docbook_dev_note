@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<bibliography
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="reference">
+
+<bibliomixed xml:id="ref.comprehension_docbook">
+  <bibliosource><link xl:href="http://hi.baidu.com/zighouse/item/a288301637c2fedbbf9042dc">理解docbook</link></bibliosource>
+  <author>zighouse</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.xml_entity_reference">
+  <bibliosource><link xl:href="http://www.w3school.com.cn/xml/xml_syntax.asp">XML中的实体引用</link></bibliosource>
+  <author>w3school</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.schema_hotwo">
+  <bibliosource><link xl:href="http://www.w3school.com.cn/schema/schema_howto.asp">DTD vs XML Schema</link></bibliosource>
+  <author>w3school</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.xml_namespaces">
+  <bibliosource><link xl:href="http://www.w3school.com.cn/xml/xml_namespaces.asp">xml的命名空间namespace</link></bibliosource>
+  <author>w3school</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.w3_entities">
+  <bibliosource><link xl:href="http://www.w3.org/2003/entities/">XML Entity Declarations for Characters</link></bibliosource>
+  <author>w3.org</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.relax_ng_xml">
+  <bibliosource><link xl:href="http://en.wikipedia.org/wiki/RELAX_NG#XML_syntax">RELAX NG - XML syntax</link></bibliosource>
+  <author>wikipedia</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.a_simple_docbook5_examle">
+  <bibliosource><link xl:href="http://easwy.com/blog/archives/a-simple-docbook-5-example/">一个简单的Docbook 5.0例子</link></bibliosource>
+  <author>easwy</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.install_fop_on_windows">
+  <bibliosource><link xl:href="http://easwy.com/blog/archives/install-apache-fop-on-windows/">在Windows上安装配置Apache FOP</link></bibliosource>
+  <author>easwy</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.db5tools">
+  <bibliosource><link xl:href="http://www.sagehill.net/docbookxsl/Db5Tools.html#Db5Diffs">DocBook 5 differences</link></bibliosource>
+  <author>sagehill</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_profiling">
+  <bibliosource><link xl:href="http://www.sagehill.net/docbookxsl/Profiling.html">Profiling</link></bibliosource>
+  <author>sagehill</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_graphics">
+  <bibliosource><link xl:href="http://www.sagehill.net/docbookxsl/Graphics.html">Graphics</link></bibliosource>
+  <author>sagehill</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.using_xincludes_with_docbook_5">
+  <bibliosource><link xl:href="http://www.sagehill.net/docbookxsl/ProcesingDb5.html">Using XIncludes with DocBook 5</link></bibliosource>
+  <author>sagehill</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_modular_doc">
+  <bibliosource><link xl:href="http://www.sagehill.net/docbookxsl/ModularDoc.html#UsingXinclude">Selecting part of a file</link></bibliosource>
+  <author>sagehill</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_qandaset">
+  <bibliosource><link xl:href="http://www.docbook.org/tdg/en/html/qandaset.html">qandaset</link></bibliosource>
+  <author>docbook</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_elelment_filename">
+  <bibliosource><link xl:href="http://www.docbook.org/tdg/en/html/filename.html">docbook elelment: filename</link></bibliosource>
+  <author>docbook</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.cygwin_intro">
+  <bibliosource><link xl:href="http://www.crifan.com/files/doc/docbook/cygwin_intro/release/html/cygwin_intro.html">Cygwin</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.npp_func_multi_enc">
+  <bibliosource><link xl:href="http://www.crifan.com/files/doc/docbook/rec_soft_npp/release/htmls/npp_func_multi_enc.html">Notepad++的多种编码支持</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_statistic_page_review">
+  <bibliosource><link xl:href="http://www.crifan.com/docbook_add_code_to_statistic_static_html_page_view/">【已解决】给Docbook生成的静态HTML页面添加统计访问次数的代码</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.docbook_upgrade_to_1_78_1">
+  <bibliosource><link xl:href="http://www.crifan.com/docbook_xsl_ns_upgrade_from_1_77_1_to_latest_1_78_1/">【记录】将docbook的xsl-ns从当前的docbook-xsl-ns-1.77.1升级到docbook-xsl-ns-1.78.1</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.pdf_keep_word_link">
+  <bibliosource><link xl:href="http://www.crifan.com/order_make_pdf_file_to_keep_the_original_word_document_page_links_and_hyperlinks_&#x200B;within_the_common_pdf_printer__installation_method_introduction/">【整理】制作pdf文件后，保持原先word文档中的页内链接和超链接+常见pdf打印机安装使用方法简介</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+<bibliomixed xml:id="ref.fop_java_lang_noclassdeffounderror">
+  <bibliosource><link xl:href="http://www.crifan.com/fop_java_lang_noclassdeffounderror_xmlgraphics_cygpath_bug_path_truncated/">【终极解决】fop错误：Exception in thread "main" java.lang.NoClassDefFoundError:org/apache/xmlgraphics/image/loader/ImageContext 的终极解决办法，即cygpath有bug，转换路径出错，导致部分路径被截断</link></bibliosource>
+  <author>Crifan Li</author>
+</bibliomixed>
+
+</bibliography>

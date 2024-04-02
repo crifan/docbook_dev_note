@@ -1,0 +1,1754 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    
+    xml:id="ch03_faq"
+    >
+<title>Docbook开发过程中的常见问题及解答</title>
+<abstract></abstract>
+<qandaset>
+
+    <qandaentry xml:id="qa.property_id_previously_used">
+        <question>
+            <para>ValidationException: Property ID xxx previously used</para>
+        </question>
+        <answer>
+            <screen>javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: Property ID "ref.ldr_syntax" (found on "fo:block") previously used; ID values must be unique within a document! (See position 1315:169)</screen>
+            <para>很常见的问题，即源码中，某个id的值，和之前的重复了。</para>
+            <para>常出现于，从别处拷贝了某段代码，然后修改完毕后，残留部分内容，导致其中有重复的id</para>
+            <para>解决办法：将重复的id删除或者改名</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.not_a_valid_child">
+        <question>
+            <para>ValidationException: xxx is not a valid child of xxx</para>
+        </question>
+        <answer>
+            <screen>javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}list-item" is not a valid child of "fo:block"! (See position 345:1605)</screen>
+            <para>错误的根本原因是：非正确地使用了某个标签。</para>
+            <para>比如某个元素不是另一个元素的子元素，但却由于不熟悉，而误用了。</para>
+            <para>但是具体的表现形式，那可能是多种多样的。</para>
+            <para>下面就简单列举一下，我所遇到过的错误的例子：</para>
+            <orderedlist>
+                <listitem>在callout中使用了qandaentry
+                    <para>结果导致此错误。然后去官网查了下：<link xl:href="http://www.docbook.org/tdg/en/html/qandaentry.html">qandaentry</link>，才得知，qandaentry的父标签，只包含三种：answer, qandadiv, qandaset。所以，此处在callout中使用qandaentry，肯定会出错了。</para>
+                    <para>解决办法：不使用该标签，或者换一个合法的位置使用该标签。</para>
+                </listitem>
+                <listitem>在part下，title和chapter之间，使用了para
+                    <para>结果导致报错：</para>
+                    <screen>org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"!</screen>
+                    <para>后来是删除了para，才去掉此错误的。</para>
+                    <para>详情参考：<link xl:href="http://www.crifan.com/fop_error_validationexception_block_not_a_valid_child_of_fo_root/">【已解决】org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"!</link></para>
+                </listitem>
+            </orderedlist>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.missing_child_element">
+        <question>
+            <para>ValidationException: xxx is missing child elements</para>
+        </question>
+        <answer>
+            <screen>
+org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "fo:list-item-body" is missing child elements. Required content model: marker* (%block;)+ (See position 77:16747)
+javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "fo:list-item-body" is missing child elements. Required content model: marker* (%block;)+ (See position 77:16747)
+            </screen>
+            <para>出现类似missing child elements的问题的话，从字面上就能看出，是说明某个关键字下面，缺少了某个必要的关键字</para>
+            <para>我遇到此问题，是因为就是折腾现在在用的这个qandaentry，结果在question下面，直接写上了内容，忘了加上para或screen等关键字，导致了始终此错误。</para>
+            <para>所以遇到此类问题的话，请自行去找找，是不是也对于某个关键字，漏了其下某个必须的关键字。</para>
+            <para>关于具体是哪个关键字出的问题，就要靠你自己调试，定位找到问题所在了。</para>
+            <para>而关于是其下缺少了哪个关键字，则是可以去<link xl:href="http://www.docbook.org/tdg/en/html/docbook.html">DocBook: The Definitive Guide</link>去找到对应关键字，看其语法的定义了。</para>
+            <para>比如对于我这里的<link xl:href="http://www.docbook.org/tdg/en/html/question.html">question</link>，其语法是</para>
+            <screen>
+question ::=
+(label?,
+ (calloutlist|glosslist|bibliolist|itemizedlist|orderedlist|
+  segmentedlist|simplelist|variablelist|caution|important|note|
+  tip|warning|literallayout|programlisting|programlistingco|
+  screen|screenco|screenshot|synopsis|cmdsynopsis|funcsynopsis|
+  classsynopsis|fieldsynopsis|constructorsynopsis|
+  destructorsynopsis|methodsynopsis|formalpara|para|simpara|
+  address|blockquote|graphic|graphicco|mediaobject|mediaobjectco|
+  informalequation|informalexample|informalfigure|informaltable|
+  equation|example|figure|table|procedure|anchor|bridgehead|
+  remark|highlights|indexterm)+)
+            </screen>
+            <para>该加号'+'表示至少有1个（或更多），所以，此处就是缺少了任何一个，才出现错误的。加上合适的，比如我此处是代码，需要一个screen，即可解决问题了。</para>
+            <para>解决办法：找到对应出错的关键字，添加必要的子（child）关键字</para>
+        </answer>
+    </qandaentry>
+    
+    <qandaentry xml:id="qa.table_column_width">
+        <question>
+            <para>docbook5中指定表格table中列column的宽度</para>
+        </question>
+        <answer>
+            <para>解决办法：在table的tgroup之后，添加对应的colspec，指定对应的colwidth，即可达到自定义表格中列的宽度。示例代码如下：</para>
+            <programlisting language="xml">
+<![CDATA[
+<table><title id="mpeg.header_format">MPEG音频的帧头的格式</title>
+    <tgroup cols="4">
+        <colspec colnum="1" colname="col1" colwidth="1*"/>
+        <colspec colnum="2" colname="col2" colwidth="1*"/>
+        <colspec colnum="3" colname="col3" colwidth="6*"/>
+        <colspec colnum="4" colname="col4" colwidth="2*"/>
+ 
+        <thead>
+            <row><entry>位置(bit)</entry><entry>长度(bit)</entry><entry>含义</entry><entry>示例</entry></row>
+        </thead>
+ 
+        <tbody>
+            <row><entry>0</entry><entry>11</entry><entry>用于同步帧，找到此帧头（所有位均置1）</entry><entry>1111 1111 111</entry></row>
+            ......
+      </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/designate_the_width_of_column_in_docbook_table/">【已解决】docbook5中指定表格table中列column的宽度</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.section_no_index">
+        <question>
+            <para>除了章（Chapter）有编号之外，其他不同层级的小节（section）都是没有编号的，想要给各小节添加索引编号</para>
+        </question>
+        <answer>
+            <para>解决办法：设置section.autolabel为1和section.label.includes.component.label为1，即可。 </para>
+            <para>即给xsltproc添加参数：</para>
+            <screen>--stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1</screen>
+            <para>或者通过给xsl文件中添加对应参数：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="section.autolabel" select="1"/>
+<xsl:param name="section.label.includes.component.label" select="1"/>
+]]>
+            </programlisting>
+            <para>也可以达到同样效果。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/add_chapter_section_indes_in_docbook/">【已解决】Docbook中给章节添加索引编号</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.include_xml_no_effect">
+        <question>
+            <para>已经include了xsl配置文件了，但是自己添加的参数配置，不起效果</para>
+        </question>
+        <answer>
+            <para>原因：很可能是xsl的import和include没搞清楚，使用了include，导致后续设置的参数，没有起效</para>
+            <para>解决办法：将&lt;xsl:include href="xxx.xsl"/&gt;改改为&lt;xsl:import href="docbook.xsl"/&gt;即可。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/difference_and_same_point_between_xsl_import_and_include/">【整理】xsl的import和include，即xsl:import与xsl:include的区别和联系</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.no_template_match">
+        <question>
+            <para>xsltproc出错：Element xxx in namespace xxx encountered in book, but no template matches</para>
+        </question>
+        <answer>
+            <para>此错误有两种类型：</para>
+            <orderedlist>
+                <listitem><screen>Element include in namespace 'http://www.w3.org/2001/XInclude' encountered in book, but no template matches.</screen>
+                    <para>原因：多数情况下，主要原因都是，没有给xsltproc添加--xinclude参数</para>
+                    <para>另外，还要注意，不要出现，xml源码中使用了xi:include，但是却同时使用了ENTITY定义，以及不要把xi:include的位置放错了</para>
+                    <para>解决办法：同时保证如下条件：</para>
+                    <orderedlist>
+                        <listitem>确保只是使用了xi:include，没有同时再使用ENTITY定义。</listitem>
+                        <listitem>确保是xi:include是放在book之内，info之外</listitem>
+                        <listitem>给xsltproc添加--xinclude参数</listitem>
+                    </orderedlist>
+                </listitem>
+                <listitem><screen>Element xxx in namespace encountered in book, but no template matches.</screen>
+                    <para>xxx为preface/chapter等docbook的元素。</para>
+                    <para>原因：没有添加对应的默认的docbook的命名空间，和XInclude的命名空间</para>
+                    <para>解决办法：将</para>
+                    <programlisting language="xml">
+<![CDATA[
+<chapter>
+]]>
+                    </programlisting>
+                    <para>改为：</para>
+                    <programlisting language="xml">
+<![CDATA[
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    
+    xml:id="mpeg_related"
+    >
+]]>
+                    </programlisting>
+                    <para>即可。</para>
+                </listitem>
+                <listitem><screen>Element listitem in namespace 'http://docbook.org/ns/docbook' encountered in listitem, but no template matches.</screen>
+                    <para>表面现象：根据字面意思是：listitem内包含了listitem，但是却找不到匹配的逻辑</para>
+                    <para>原因：实际上是，此处是listitem内该有个itemizedlist的，但是由于笔误而忘记写了。</para>
+                    <para>解决办法：添加缺失的itemizedlist即可。</para>
+                    <para>具体情况是：</para>
+                    <programlisting language="xml">
+<![CDATA[
+<itemizedlist>
+    <listitem>应用程序
+        <itemizedlist>
+            <listitem>应用程序</listitem>
+            <listitem>库函数</listitem>
+        </itemizedlist>
+    </listitem>
+    <listitem>操作系统内核
+        <listitem>各个功能模块：网络，文件系统，进程通信，进程管理，存储管理</listitem>
+        <listitem>硬件抽象层HAL</listitem>
+    </listitem>
+    <listitem>硬件</listitem>
+</itemizedlist>
+]]>
+                    </programlisting>
+                    <para>很明显是，在itemizedlist内的listitem有嵌套的itemizedlist，但是不小心忘记写内层的itemizedlist了。</para>
+                    <para>改为如下即可：</para>
+                    <programlisting language="xml">
+<![CDATA[
+<itemizedlist>
+    <listitem>应用程序
+        <itemizedlist>
+            <listitem>应用程序</listitem>
+            <listitem>库函数</listitem>
+        </itemizedlist>
+    </listitem>
+    <listitem>操作系统内核
+        <itemizedlist>
+            <listitem>各个功能模块：网络，文件系统，进程通信，进程管理，存储管理</listitem>
+            <listitem>硬件抽象层HAL</listitem>
+        </itemizedlist>
+    </listitem>
+    <listitem>硬件</listitem>
+</itemizedlist>
+]]>
+                    </programlisting>
+                    <para>举一反三：以后再遇到这类的错误，先去看清字面的意思，然后往往就可以看出，具体错误的原因。比如此处的是listitem内包含listitem，找不到匹配的模板，意味着listitem内不应该包含listitem，然后就可以去找代码中，到底是哪里出现了，listitem内包含listitem的情况。然后就可以梳理代码，找到错误的位置。否则对于这类没有提醒错误代码的位置，想要找到错误位置简直就像大海捞针。</para>
+                    <para></para>
+                </listitem>
+            </orderedlist>
+            <para></para>
+            <para>解决办法：综合两种类型，给出可以使用的示例代码：</para>
+            <para>主文件，比如docbook_dev_note.xml中，如下：</para>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xml:lang="zh_CN"
+    >
+
+<info>
+    <title>Docbook开发手记</title>
+    <subtitle></subtitle>
+    <revhistory>...</revhistory>
+    <pubdate>2012-06-01</pubdate>
+    <copyright>
+        <year>2012</year>
+        <holder>Crifan</holder>
+        <holder><link xl:href="http://crifan.com" /></holder>
+    </copyright>
+    <legalnotice>...</legalnotice>
+</info>
+
+<xi:include href="preface.xml" />
+<xi:include href="ch01_build_env.xml" />
+<xi:include href="appendix.xml" />
+
+</book>
+]]>
+            </programlisting>
+            <para>每个单独的分割的xml文件中，如下：</para>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch01_build_env"
+    >
+
+<title>xxx</title>
+    <sect1><title>xxx</title>
+        <sect2><title>yyy</title>
+            <para>xxx</para>
+        </sect2>
+...
+    </sect1>
+    
+    <para>xxx</para>
+</chapter>
+]]>
+            </programlisting>
+            <para>然后在使用xsltproc处理xml的时候，记得加上参数<parameter>--xinclude</parameter>，即可。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_element_in_namespace_encountered_in_book_but_no_template_matches/">【已解决】docbook中使用xsltproc出错：Element xxx in namespace xxx encountered in book, but no template matches</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.pdf_not_show_revhistory">
+        <question>
+            <para>pdf中没有出现/显示revhistory所对应的历史版本</para>
+        </question>
+        <answer>
+            <para>原因：对应的stylesheet配置文件<filename>titlepage.templates.xml</filename>中没有添加revhistory，导致编出来的pdf中没有显示对应历史版本部分的内容。</para>
+            <para>解决办法：编辑<filename>titlepage.templates.xml</filename>，添加revhistory，变成：</para>
+            <programlistingco>
+                <programlisting>
+  &lt;t:titlepage t:element="book" t:wrapper="fo:block"&gt;
+    &lt;t:titlepage-content t:side="recto"&gt;
+...
+      &lt;author font-size="&amp;hsize3;"
+	      space-before="&amp;hsize2space;"
+	      keep-with-next.within-column="always"/&gt;
+      &lt;!-- If you add editor, include this t:predicate attribute
+           because only the first editor generates the list of editors.
+      &lt;editor t:predicate="[position() = 1]"/&gt;
+      --&gt;
+    &lt;abstract   text-align="left"
+                space-before="&amp;hsize5space;"/&gt;
+    &lt;revhistory<co id="co.revh" linkends="co.note.revh" /> text-align="left"
+                space-before="&amp;hsize5space;"/&gt;<co id="co.revh_setting" linkends="co.note.revh_setting" />
+    &lt;/t:titlepage-content&gt;
+...
+&lt;/t:titlepage&gt;
+                </programlisting>
+                <calloutlist>
+                    <callout id="co.note.revh" arearefs="co.revh">
+                        <para>添加对应的revhistory部分，可以根据自己的需要，放到合适的位置</para>
+                    </callout>
+                    <callout id="co.note.revh_setting" arearefs="co.revh_setting">
+                        <para>text-align，space-before等相关的设置，可以参考其他部分的设置，照葫芦画瓢，写出自己需要的配置。</para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+            <para>然后将其另存为titlepage.templates_crl.xml，放在当前文件夹下。</para>
+            <para>再用如下命令去编译出相应的xsl文件：</para>
+            <screenco>
+                <screen>xsltproc --output titlepage.templates_crls.xsl<co id="co.para_output" linkends="co.note.para_output" /> D:/tmp/tmp_dev_root/cgwin/home/CLi/develop/docbook/tools/docbook-xsl-ns-1.76.1/template/titlepage.xsl<co id="co.ref_template" linkends="co.note.ref_template" /> titlepage.templates_crl.xml<co id="co.self_xml" linkends="co.note.self_xml" /> </screen>
+                <calloutlist>
+                    <callout id="co.note.para_output" arearefs="co.para_output">
+                        <para>输出xsl的文件名</para>
+                    </callout>
+                    <callout id="co.note.ref_template" arearefs="co.ref_template">
+                        <para>xsl-ns自带的titlepage的template</para>
+                    </callout>
+                    <callout id="co.note.self_xml" arearefs="co.self_xml">
+                        <para>上述的，经过自己修改之后的xml模板文件</para>
+                    </callout>
+                </calloutlist>
+            </screenco>
+            <para>这样，就可以生成相应的<filename>titlepage.templates_crls.xsl</filename>了，然后去把此xsl文件添加到自己的配置中去：</para>
+            <programlisting>
+<![CDATA[
+<xsl:import href="titlepage.templates_crl.xsl"/>
+]]>
+            </programlisting>
+            <para>用此配置编出来的pdf，就可以保护对应的revhistory部分的内容了。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_revhistory_ont_show_display_in_pdf/">【已解决】docbook中pdf中没有出现/显示revhistory所对应的历史版本</link></para>
+            <para>关于这个问题，多说几句：</para>
+            <para>revhistory问题，同样也是releaseinfo所遇到的，默认pdf中都没有包含。</para>
+            <para>在mailing list中看到别人在2005年的时候，就讨论到此问题，默认pdf中没有releaseinfo：</para>
+            <para><ulink url="http://lists.oasis-open.org/archives/docbook-apps/200510/msg00051.html">&lt;releaseinfo&gt; missing from fo book titlepage template?</ulink></para>
+            <para>而相关的开发人员Michael Smith也回复说，以后会添加此功能，结果我现在2012年了，用的fop 1.0 + docbook-xsl-ns-1.76.1，其中默认配置所输出的pdf中，也还是没把releaseinfo添加进来的。</para>
+            <para>而同样的问题，也出现在revhistory，默认输出的pdf中，是没有的。而默认输出的HTML中就有。</para>
+            <para>对此问题，即便是为了官网在解释如何定制化titlepage的教程中，把revhistory当做例子来解释，但是如此常用的功能，也应该在pdf输出中，像HTML输出一样，把其加入进来，否则对于多数使用者，在源码中写了revhistory和releaseinfo，结果输出的HTML中有，PDF中却没有，肯定会造成现在所已经出现的问题，就是大家都以为这个问题是个bug，所以google也能搜到一堆这类问题。</para>
+            <para>最新的结果是，新出的docbook-xsl-ns-1.77.0中，也还是没有把revhistory和releaseinfo包含进来，真是无语。。。</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.pdf_image_not_found">
+        <question>
+            <para>生成pdf的时候出错：严重: Image not found. URI: xxx.png. (See position xxx)</para>
+        </question>
+        <answer>
+            <para>原因：从问题本质上说，在图片存在的前提下，都是图片路径不正确。</para>
+            <para>但是对于为何图片路径不正确，至少有两种类型错误：</para>
+            <orderedlist>
+                <listitem>本身图片路径设置有误
+                    <para>原因：对于图片本身所在的路径，没有正确指定对应的图片的地址，包括自己文章相关的图片的地址，和docbook系统相关的callout/admon/navig等相关的callout.graphics.path，admon.graphics.path，navig.graphics.path等路径。</para>
+                    <para>解决办法：自行查找自己所设置的路径正确与否。</para>
+                </listitem>
+                <listitem>运行环境不同，导致当前路径所相对应的图片路径有误，而找不到图片
+                    <para>之前由于某次改变了运行环境，换到了别的路径下，执行相应的命令去生成html和pdf，结果出现找不到图片的错误。</para>
+                    <para>原因：换了运行脚本的路径，导致之前所设置的图片的相对路径，变得无效了。</para>
+                    <para>解决办法：确保运行的环境所处的路径，是自己所期望的。</para>
+                    <para>详情参考<link xl:href="http://www.crifan.com/docbook_image_not_found/">﻿【已解决】docbook最后生成pdf的时候出错：严重: Image not found. URI: xxx.png. (See position xxx)</link></para>
+                </listitem>
+            </orderedlist>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.add_revision_number">
+        <question>
+            <para>想要给book中的标题下面添加一个版本号</para>
+        </question>
+        <answer>
+            <para>没有找到专门的元素。暂时先借用releaseinfo来实现放此版本号等内容。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/add_latest_version_number_for_docbook_book/">【已解决】给docbook中的book添加最新的版本号</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.revhistory_table_no_frame">
+        <question>
+            <para>输出的pdf中的revhistory历史版本的内容中的表格无边框，想要添加边框</para>
+        </question>
+        <answer>
+            <para>解决办法：添加如下配置：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<!--<xsl:import href="titlepage_crl.xsl"/> -->
+
+<xsl:attribute-set name="revhistory.title.properties">
+  <xsl:attribute name="font-size">12pt</xsl:attribute>
+  <xsl:attribute name="font-family">
+    <xsl:value-of select="$title.fontset"/>
+  </xsl:attribute>
+  <xsl:attribute name="text-align">left</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="revhistory.table.properties">
+  <xsl:attribute name="border">0.5pt solid black</xsl:attribute>
+  <xsl:attribute name="width">50%</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="revhistory.table.cell.properties">
+  <xsl:attribute name="border">0.5pt solid black</xsl:attribute>
+  <xsl:attribute name="font-size">9pt</xsl:attribute>
+  <xsl:attribute name="padding">4pt</xsl:attribute>
+</xsl:attribute-set>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/add_table_board_line_for_revhistory_in_pdf_of_docbook/">【已解决】给docbook所输出的pdf中的revhistory历史版本的表格，添加边框</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.remove_link_address">
+        <question>
+            <para>如何去掉docbook中输出的pdf中，除了带链接的文字之外的那个链接地址</para>
+        </question>
+        <answer>
+            <para>原因：PDF配置中，默认开启了ulink.show，所以会导致链接的地址，也同链接的文字同步显示出来。</para>
+            <para>解决办法：设置ulink.show为0即可。</para>
+            <para>给xsltproc传递参数</para>
+            <screen>–-stringparam ulink.show 0</screen>
+            <para>或者添加如下配置：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="ulink.show" select="0"/>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/make_http_link_address_not_show_in_pdf_of_docbook/">【已解决】去掉docbook中输出的pdf中，除了带链接的文字之外的那个链接地址</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.hyperlink_blue_color">
+        <question>
+            <para>给docbook生成的pdf中的带链接的文字,添加下划线和设置字体颜色为蓝色</para>
+        </question>
+        <answer>
+            <para>解决办法：添加如下配置：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:attribute-set name="xref.properties">
+  <xsl:attribute name="color">blue</xsl:attribute>
+  <xsl:attribute name="text-decoration">underline</xsl:attribute>
+</xsl:attribute-set>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/add_underline_underscore_for_link_in_docbook_pdf/">【已解决】给docbook生成的pdf中的带链接的文字,添加下划线和设置字体颜色为蓝色</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.pdf_bookmark">
+        <question>
+            <para>如何给docbook的pdf添加bookmark书签的功能</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>添加如下配置：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="fop1.extensions">1</xsl:param>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/remove_indent_of_content_and_add_bookmark_for_docbook_pdf/">【顺带实现】给docbook的pdf添加bookmark书签的功能</link></para>
+            <para>更多的关于fop1.extensions的解释，可以去看：<link xl:href="http://www.sagehill.net/docbookxsl/InstallingAnFO.html">Installing an XSL-FO processor</link>和<link xl:href="http://docbook.sourceforge.net/release/xsl/1.76.1/doc/fo/fop1.extensions.html">fop1.extensions</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.remove_body_indent">
+        <question>
+            <para>Docbook的pdf，去除正文对于标题的缩进indent</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>添加如下配置：</para>
+            <programlisting language="xml">
+<![CDATA[
+<xsl:param name="body.start.indent">0pt</xsl:param>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/remove_indent_of_content_and_add_bookmark_for_docbook_pdf/">【已解决】Docbook的pdf，去除正文对于标题的缩进indent</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.pdf_emphasis_no_effect">
+        <question>
+            <para>生成的pdf中emphasis无效果，想要实现给pdf中emphasis的文字加粗或斜体</para>
+        </question>
+        <answer>
+            <para>原因：由于当前使用的是中文字体，中文字体没有对应的粗体和斜体，所以无效果。</para>
+            <para>与此相对的是，很多英文字体，是有对应的粗体或斜体的，所以会有效果。</para>
+            <para>而其他word等文字处理软件中，中文字体也有粗体和斜体的效果，只是相应软件处理生成出来的效果。</para>
+            <para>解决办法：此处想要给emphasis的文字的颜色设置为brown</para>
+            <para>主要就是修改inline.italicseq和inline.boldseq的部分，把相应的font-style="italic"和font-weight="bold"都改为color="brown"即可。</para>
+            <para>即添加如下配置：</para>
+            <programlisting language="xml">
+&lt;!--================================&#x200B;============================================
+emphasis setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!-- copy from docbook-xsl-ns-1.77.0\fo\inline.xsl -->
+<xsl:template name="inline.italicseq">
+  <xsl:param name="content">
+    <xsl:call-template name="simple.xlink">
+      <xsl:with-param name="content">
+        <xsl:apply-templates/>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:param>
+
+  <!-- changed by crifan start -->
+  <!-- <fo:inline font-style="italic"> -->
+  <fo:inline color="brown">
+  <!-- changed by crifan end -->
+    <xsl:call-template name="anchor"/>
+    <xsl:if test="@dir">
+      <xsl:attribute name="direction">
+        <xsl:choose>
+          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
+          <xsl:otherwise>rtl</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:copy-of select="$content"/>
+  </fo:inline>
+</xsl:template>
+
+<xsl:template name="inline.boldseq">
+  <xsl:param name="content">
+    <xsl:call-template name="simple.xlink">
+      <xsl:with-param name="content">
+        <xsl:apply-templates/>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:param>
+
+  <!-- changed by crifan start -->
+  <!-- <fo:inline font-weight="bold"> -->
+  <fo:inline color="brown">
+  <!-- changed by crifan end -->
+    <xsl:if test="@dir">
+      <xsl:attribute name="direction">
+        <xsl:choose>
+          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
+          <xsl:otherwise>rtl</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:copy-of select="$content"/>
+  </fo:inline>
+</xsl:template>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_pdf_emphasis_no_effect_for_chinese_font/">﻿【已解决】docbook中生成的pdf的（中文字体的）emphasis无效果，没有加粗或斜体等效果</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.xsl_entity">
+        <question>
+            <para>如何给（docbook中的）xsl中定义实体Entity</para>
+        </question>
+        <answer>
+            <para>解决办法：参考如下中的xsl_ns_base_cygwin如何定义的，即可：</para>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0'?>
+<!DOCTYPE stylesheet 
+[
+<!ENTITY xsl_ns_base_cygwin "/home/develop/docbook/tools_root/docbook-xsl-ns-1.77.0">
+]
+>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version='1.0'>
+<xsl:import href="&xsl_ns_base_cygwin;/html/docbook.xsl"/>
+<xsl:import href="../common_html.xsl"/>
+</xsl:stylesheet> 
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/define_entity_in_xsl_file_in_docbook/">【已解决】如何给（docbook中的）xsl中定义实体Entity</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.pdf_table_background">
+        <question>
+            <para>给docbook的pdf中的等式(equation)设置背景色</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>添加如下配置：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:attribute-set name="equation.properties" use-attribute-sets="formal.object.properties">
+    <xsl:attribute name="border-style">solid</xsl:attribute>
+    <xsl:attribute name="border-width">0.5pt</xsl:attribute>
+    <xsl:attribute name="background-color">silver</xsl:attribute>
+</xsl:attribute-set>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_pdf_set_equation_background_color/">【已解决】给docbook的pdf中的等式(equation)设置背景色</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.single_html_to_multiple">
+        <question>
+            <para>如何将默认的输出单个的HTML页面，改为输入多个HTML页面？</para>
+        </question>
+        <answer>
+            <para>解决办法：将之前引用html的docbook.xsl换为chunk.xsl即可。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/make_output_multiple_html_file_for_docbook/">【已解决】把Docbook默认输出的单个HTML文件，改为输出多个的HTML文件</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.table_header_background">
+        <question>
+            <para>如何给docbook中的表格（table）的第一行（firstrow或thead）添加背景色？</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>添加如下配置：</para>
+            <programlisting language="xml" >
+&lt;!--================================&#x200B;============================================
+table setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!-- copy from docbook-xsl-ns-1.76.1\fo\table.xsl -->
+<!-- Expand this template to add properties to any fo:table-cell -->
+<xsl:template name="table.cell.properties">
+  <xsl:param name="bgcolor.pi" select="''"/>
+  <xsl:param name="rowsep.inherit" select="1"/>
+  <xsl:param name="colsep.inherit" select="1"/>
+  <xsl:param name="col" select="1"/>
+  <xsl:param name="valign.inherit" select="''"/>
+  <xsl:param name="align.inherit" select="''"/>
+  <xsl:param name="char.inherit" select="''"/>
+
+  <xsl:choose>
+    <xsl:when test="ancestor::d:tgroup">
+
+      <!-- added by crifan start -->
+      <xsl:if test="ancestor::d:thead">
+        <xsl:attribute name="background-color">antiquewhite</xsl:attribute>
+      </xsl:if>
+      <!-- added by crifan end -->
+      
+      <xsl:if test="$bgcolor.pi != ''">
+        <xsl:attribute name="background-color">
+          <xsl:value-of select="$bgcolor.pi"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="$rowsep.inherit &gt; 0">
+        <xsl:call-template name="border">
+          <xsl:with-param name="side" select="'bottom'"/>
+        </xsl:call-template>
+      </xsl:if>
+
+      <xsl:if test="$colsep.inherit &gt; 0 and 
+                      $col &lt; (ancestor::d:tgroup/@cols|ancestor::d:entrytbl/@cols)[last()]">
+        <xsl:call-template name="border">
+          <xsl:with-param name="side" select="'end'"/>
+        </xsl:call-template>
+      </xsl:if>
+
+      <xsl:if test="$valign.inherit != ''">
+        <xsl:attribute name="display-align">
+          <xsl:choose>
+            <xsl:when test="$valign.inherit='top'">before</xsl:when>
+            <xsl:when test="$valign.inherit='middle'">center</xsl:when>
+            <xsl:when test="$valign.inherit='bottom'">after</xsl:when>
+            <xsl:otherwise>
+              <xsl:message>
+                <xsl:text>Unexpected valign value: </xsl:text>
+                <xsl:value-of select="$valign.inherit"/>
+                <xsl:text>, center used.</xsl:text>
+              </xsl:message>
+              <xsl:text>center</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:choose>
+        <xsl:when test="$align.inherit = 'char' and $char.inherit != ''">
+          <xsl:attribute name="text-align">
+            <xsl:value-of select="$char.inherit"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$align.inherit != ''">
+          <xsl:attribute name="text-align">
+            <xsl:value-of select="$align.inherit"/>
+          </xsl:attribute>
+        </xsl:when>
+      </xsl:choose>
+
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- HTML table -->
+      <xsl:if test="$bgcolor.pi != ''">
+        <xsl:attribute name="background-color">
+          <xsl:value-of select="$bgcolor.pi"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="$align.inherit != ''">
+        <xsl:attribute name="text-align">
+          <xsl:value-of select="$align.inherit"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="$valign.inherit != ''">
+        <xsl:attribute name="display-align">
+          <xsl:choose>
+            <xsl:when test="$valign.inherit='top'">before</xsl:when>
+            <xsl:when test="$valign.inherit='middle'">center</xsl:when>
+            <xsl:when test="$valign.inherit='bottom'">after</xsl:when>
+            <xsl:otherwise>
+              <xsl:message>
+                <xsl:text>Unexpected valign value: </xsl:text>
+                <xsl:value-of select="$valign.inherit"/>
+                <xsl:text>, center used.</xsl:text>
+              </xsl:message>
+              <xsl:text>center</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:call-template name="html.table.cell.rules"/>
+
+    </xsl:otherwise>
+
+  </xsl:choose>
+
+</xsl:template>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/set_background_color_for_first_row_of_table_for_docbook/">【已解决】给docbook中的表格（table）的第一行（firstrow或thead）添加背景色</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.generate_chm">
+        <question>
+            <para>如何用docbook生成chm（微软帮助文件）？</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>总的逻辑是：使用htmlhelp.xsl生成相关的HTML文件和一个总的配置文件htmlhelp.hhp，再用微软的工具hhc去将htmlhelp.hhp转换为对应的chm文件。</para>
+            <para>当然，使用htmlhelp.xsl的时候，别忘了加上自己的配置，我的配置如下：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<?xml version='1.0'?>
+ 
+<!DOCTYPE stylesheet
+[
+<!ENTITY xsl_ns_base_cygwin "/home/CLi/develop/docbook/tools/docbook-xsl-ns-1.76.1">
+]
+>
+ 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version='1.0'>
+ 
+<xsl:import href="&xsl_ns_base_cygwin;/htmlhelp/htmlhelp.xsl"/>
+ 
+<xsl:output
+            encoding="UTF-8"
+            indent="no"/>
+ 
+<xsl:param name="title.font.family">msyhbd</xsl:param>
+<xsl:param name="body.font.family">msyh</xsl:param>
+<xsl:param name="monospace.font.family">msyh</xsl:param>
+ 
+</xsl:stylesheet>
+]]>
+            </programlisting>
+            <para>然后用：</para>
+            <screen>xsltproc --xinclude -o MPEG_VBR.html docbook_htmlhelp_crl.xsl MPEG_VBR.xml</screen>
+            <para>生成对应的HTML文件和htmlhelp.hhp</para>
+            <para>然后再去下载<link xl:href="http://download.microsoft.com/download/0/a/9/0a939ef6-e31c-430f-a3df-dfae7960d564/htmlhelp.exe">HTML Help Wordshop</link>并安装。</para>
+            <para>然后用</para>
+            <screen>hhc htmlhelp.hhp</screen>
+            <para>去生成对应的chm</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/use_docbook_output_htmlhelp_fix_messy_cn_char_of_chm_title_and_toc_index/">【全部解决】用Docbook生成htmlhelp</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.chm_toc_messy_code">
+        <question>
+            <para>docbook生成的chm的左边目录等内容都是乱码</para>
+        </question>
+        <answer>
+            <para>原因：主要是由于微软的hhc对UTF-8编码支持不好，导致会出现乱码。</para>
+            <para>解决办法：确保本身输出的HTML都是UTF-8编码：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="htmlhelp.encoding">UTF-8</xsl:param>
+<xsl:param name="chunker.output.encoding">UTF-8</xsl:param>
+]]>
+            </programlisting>
+            <para>然后再用iconv将UTF-8转换为GB18030（因为我的本地系统是中文的GBK，而GB18030是GBK的超集，使用GB18030比GBK更好，可以支持更多的字符）</para>
+            <screen>
+<![CDATA[            
+iconv -f UTF-8 -t GB18030 < ../output/htmlhelp/htmlhelp.hhp > ../output/htmlhelp/htmlhelp_gb18030.hhp
+mv ../output/htmlhelp/htmlhelp_gb18030.hhp ../output/htmlhelp/htmlhelp.hhp
+ 
+iconv -f UTF-8 -t GB18030 < ../output/htmlhelp/toc.hhc > ../output/htmlhelp/toc_gb18030.hhc
+mv ../output/htmlhelp/toc_gb18030.hhc ../output/htmlhelp/toc.hhc
+]]>
+            </screen>
+            <para>最后再用hhc去处理，就可以了：</para>
+            <screen>hhc htmlhelp.hhp</screen>
+            <para>详情参考<link xl:href="http://www.crifan.com/use_docbook_output_htmlhelp_fix_messy_cn_char_of_chm_title_and_toc_index/">【完全解决】生成的chm中标题和左边的索引目录是乱码的问题</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.qanda_into_toc">
+        <question>
+            <para>如何将qanda的标题添加到TOC目录中去？</para>
+        </question>
+        <answer>
+            <para>解决办法：设置qanda.in.toc为1即可：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="qanda.in.toc">1</xsl:param>
+]]>
+            </programlisting>
+            <para>更多的解释，请参考：<link xl:href="http://www.sagehill.net/docbookxsl/QandaInToc.html">Q and A in table of contents</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.generate_rtf">
+        <question>
+            <para>如何将docbook转换为（和word兼容的）RTF文档？</para>
+        </question>
+        <answer>
+            <para>解决办法：先用xsltproc转换xml为fo，然后再用fop将fo转换为rtf：</para>
+            <screen>fop -c fop.xconf MPEG_VBR.fo -rtf MPEG_VBR.rtf</screen>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_output_rtf_word_compatible_format/">【记录】将docbook的xml源码，通过xsltproc和FOP生成（可用word打开的）RTF（Word兼容）格式</link></para>
+            <note><title>目前已知的没有非常好的生成RTF的办法</title>
+                <para>目前折腾的几种方法，包括xsltproc+fop，openjade，XFC等，生成的rtf，效果都不是很好，所以貌似除非有空自己折腾一下，添加对应的xsl的配置，以使得生成的rtf效果更好些，目前暂无别的好的办法。</para>
+                <para>详情可以去看偶的折腾过程：<link xl:href="http://www.crifan.com/docbook_rtf_fop_warning_only_simple_page_masters_are_supported_on_page_sequences&#x200B;_rtf_fo_leader_reference_area_not_supported/">【已放弃解决】将docbook的xml，用xsltproc和fop生成rtf时出错：WARNING: Only simple-page-masters are supported on page-sequences. Using default simple-page-master from page-sequence-master "titlepage" "front" "body" "back",WARNING: RTF: fo:leader reference-area not supported + 【记录】折腾openjade和XFC去生成RTF</link></para>
+            </note>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.generate_webhelp">
+        <question>
+            <para>如何用Docbook生成Webhelp？</para>
+        </question>
+        <answer>
+            <para>解决办法：使用webhelp.xsl即可。不过偶目前暂时还没折腾出来。有空再去弄。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_output_webhelp/">【记录】将Docbook生成Webhelp</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.font_not_found_substituting">
+        <question>
+            <para>用fop生成pdf过程中出现警告：warning: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400"</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <para>如果只是想要去除此警告，那么可以加上此配置即可：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="symbol.font.family"></xsl:param>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_fop_pdf_warning_font_symbol_not_found_substituting_with/">【已解决】Docbook中用fop生成pdf过程中出现警告：warning: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400"</link></para>
+            <note>
+                <para>实际上，此symbol.font.family对应着的是“符号”所采用哪种字体</para>
+                <para>而我们的目的，其实应该是支持最全的字符的显示，而不是关注，如何取消此无关紧要的警告。</para>
+                <para>而据说Cambria Math字体包含的字符算是最全的了，所以，建议设置为：</para>
+                <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="symbol.font.family"></xsl:param>
+]]>
+                </programlisting>
+                <para>以此实现各种特殊字符，都能可以很好的显示出来。（因为之前用微软雅黑，好像个别特殊字符显示不出来，所以才会如此设置。）</para>
+            </note>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.not_find_hypernation_pattern">
+        <question>
+            <para>Docbook中使用fop过程中出错：严重: Couldn’t find hyphenation pattern zh_cn</para>
+        </question>
+        <answer>
+            <para>解决办法：虽然有此提示，但是实际上中文的断字，基本上已经很好了。至少我这里这么多的book，都没有出现之前别人遇到的，中文的标点符号，偶尔会在句首出现的问题。</para>
+            <para>但是的确好像对于中文的hyphenation，没有官方的支持的。只有en等英语的支持。</para>
+            <para>总的来说，就一句话，暂时可以忽略此“严重”型的警告，生成的pdf中的中文的显示，都还是正常的。</para>
+            <para>详情参考：<link xl:href="http://www.crifan.com/docbook_fop_could_not_find_hyphenation_pattern_zh_cn/">【部分解决】Docbook中使用fop过程中出错：严重: Couldn’t find hyphenation pattern zh_cn</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.exception_noclassdeffounderror_imagecontext">
+        <question>
+            <para>cygwin/linux下的fop运行出错：Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/xmlgraphics/image/loader/ImageContext</para>
+        </question>
+        <answer>
+            <para>原因：fop中所用到的cygpath有bug，导致不很好的支持windows中关于CLASS_PATH的定义，最终导致转换出来的路径出错，无法找到相应的各种的java的库</para>
+            <para>解决办法：修改fop文件，将（大概是189行的）：</para>
+            <programlisting language="xml">
+LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
+            </programlisting>
+            <para>改为：</para>
+            <programlisting language="xml">
+#LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
+# for cygpath has bug, so use follow workaround
+# edit by admin AT crifan DOT com
+LCP_TEMP=`cygpath --path --$format "$LOCALCLASSPATH"`
+LCP_TEMP=`cygpath --path --unix "$LCP_TEMP"`
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/fop_java_lang_noclassdeffounderror_xmlgraphics_cygpath_bug_path_truncated/">【终极解决】fop错误：Exception in thread "main" java.lang.NoClassDefFoundError:org/apache/xmlgraphics/image/loader/ImageContext 的终极解决办法，即cygpath有bug，转换路径出错，导致部分路径被截断</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.invalid_indent_value">
+        <question>
+            <para>Docbook中用xsltproc生成HTML过程中出错：runtime error xxx/chunker.xsl line 226 element document, invalid value for indent,xsltRunStylesheet : run failed</para>
+        </question>
+        <answer>
+            <para>原因：有些参数的值，是字符串，所以如果没有用单引号括起来，则会导致参数赋值出错。</para>
+            <para>解决办法：将原先的参数赋值中的字符串类型的值，加上单引号。即，把：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="chunker.output.indent" select="yes"/> 
+]]>
+            </programlisting>
+            <para>改为：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="chunker.output.indent" select="'yes'"/> 
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_xsltproc_generate_html_runtime_error_invalid_value_for_indent_xsltrunstylesheet_run_failed/">【已解决】Docbook中用xsltproc生成HTML过程中出错：runtime error xxx/chunker.xsl line 226 element document, invalid value for indent,xsltRunStylesheet : run failed</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.html_charset_empty">
+        <question>
+            <para>docbook的xsltproc生成的HTML中Charset的值是空的，不是所设置的UTF-8</para>
+        </question>
+        <answer>
+            <para>原因：同<xref linkend="qa.invalid_indent_value" /></para>
+            <para>解决办法：把</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="chunker.output.encoding" select="UTF-8"/>
+]]>
+            </programlisting>
+            <para>改为：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:param name="chunker.output.encoding" select="'UTF-8'"/>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_xsltproc_generate_html_runtime_error_invalid_value_for_indent_xsltrunstylesheet_run_failed/">【顺带解决】docbook的xsltproc生成的HTML中Charset的值是空的，不是所设置的UTF-8</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.abbrev_after_toc">
+        <question>
+            <para>如何给Docbook中添加abbrev缩略词一项，且放置在目录之后，正文之前？</para>
+        </question>
+        <answer>
+            <para>解决办法：单独写一个glossary.xml，其中内容如下：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<glossary xmlns="http://docbook.org/ns/docbook"
+    xml:id="glossary"
+    xmlns:xi="http://www.w3.org/2001/XInclude">
+<title>缩略词</title>
+
+<glossentry id="ASE"><glossterm>ASE</glossterm>
+    <acronym>ASE</acronym>
+    <glossdef>
+      <para>Application Specific Extension</para>
+      <para>（根据应用的）专用扩展</para>
+    </glossdef>
+</glossentry>
+
+<glossentry id="xxx"><glossterm>xxx</glossterm>
+    <acronym>xxx</acronym>
+    <glossdef>
+      <para>xxx</para>
+      <para>xxx</para>
+    </glossdef>
+</glossentry>
+
+</glossary>
+]]>
+            </programlisting>
+            <para>然后将把glossary部分源码放到bookinfo之后，XInclude其他各个章节之前：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<book version="5.0" ... >
+
+<bookinfo>
+    <title>ARM与MIPS的详细对比</title>
+    <subtitle></subtitle>
+...
+</bookinfo>
+<xi:include href="glossary.xml"/>
+<xi:include href="ch01_reduced_instruction_set.xml"/>
+...
+</book>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_generate_acronym_abbrev_auto_link_to_glossary_item/">【已解决】给Docbook中添加缩略词 + 自动链接到缩略词表项 + 将缩略词单独放置一页，且位于目录之后，正文之前</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.html_programlisting_background">
+        <question>
+            <para>给Docbook的HTML的等式（equation），程序源码（programlisting）等添加背景色</para>
+        </question>
+        <answer>
+            <para>解决办法：添加相应的css文件，其配置如下：</para>
+            <programlisting language="css">
+/*
+ * about html color and corresponding name  can refer: 
+ * http://www.w3schools.com/html/html_colornames.asp
+ */
+
+/* programlisting */
+pre.programlisting {
+/* background-color: #F4F4F4 ; */
+  background-color: Lavender ;
+  border: 1px solid #006600 ;
+}
+
+/* screen */
+pre.screen {
+/* background-color: #F4F4F4 ; */
+  background-color: Lavender ;
+  border: 1px solid #006600 ;
+}
+
+/* equation */
+div.equation {
+/* background-color: #F4F4F4 ; */
+  background-color: Lavender ;
+  border: 1px solid #006600 ;
+}
+
+
+/* table */
+/* thead=table header */
+thead {
+  background-color: antiquewhite ;
+}
+
+/* QandA: Question and Answer */
+tr.question
+{
+  background-color: antiquewhite ;
+}
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_html_equation_background_color/">【已解决】给Docbook的HTML的等式添加背景色</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.html_pdf_figure_not_unify">
+        <question>
+            <para>PDF中和HTML中的图片显示，始终不能统一，要么HTML中是放大的，要么PDF中不能完全显示，所以希望PDF和HTML中的图片显示可以用同一套代码来统一</para>
+        </question>
+        <answer>
+            <para>解决办法：参考如下代码：</para>
+            <para>对于多数的，尺寸大于pdf中页面宽度（大概是500左右的像素）的图片，则使用pdf中设置为自动缩放：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<figure><title>Nand Flash的结构图</title>
+    <mediaobject>
+        <imageobject role="html">
+            <imagedata fileref="images/nand_flash_layout.png" align="center" scalefit="0" width="100%" />
+        </imageobject>
+        <imageobject role="fo">
+            <imagedata fileref="images/nand_flash_layout.png" align="center" scalefit="1" width="100%"/>
+        </imageobject>
+    </mediaobject>
+</figure>
+]]>
+            </programlisting>
+            <para>对于多数的，尺寸小于pdf中页面宽度的图片，则使用pdf中设置为禁止自动缩放，并且自行调节显示的比例：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<figure><title>典型的Flash内存单元的物理结构</title>
+    <mediaobject>
+        <imageobject role="html">
+            <imagedata fileref="images/flash_cell_structure.jpg" align="center" scalefit="0" width="100%" />
+        </imageobject>
+        <imageobject role="fo">
+            <imagedata fileref="images/flash_cell_structure.jpg" align="center" scalefit="0" width="80%"/>
+        </imageobject>
+    </mediaobject>
+</figure>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/try_to_unify_the_scale_of_figure_in_html_and_pdf_of_docbook/">【基本解决】Docbook生成的PDF和HTML中图片缩放不统一</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.html_pdf_figure_align_center">
+        <question>
+            <para>想要设置HTML和PDF中的图片的标题都是居中对齐</para>
+        </question>
+        <answer>
+            <para>解决办法：</para>
+            <orderedlist>
+                <listitem>FOP
+                    <para>对于FOP添加设置：</para>
+                    <programlisting language="xml" >
+&lt;!--================================&#x200B;============================================
+formal(figure/table/equation/example/...) setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!-- copy from docbook-xsl-ns-1.76.1\fo\formal.xsl -->
+<!-- http://www.sagehill.net/docbookxsl/TitleFontSizes.html#FormalTitleProperties -->
+<xsl:attribute-set name="formal.title.properties"
+                   use-attribute-sets="normal.para.spacing">
+  <xsl:attribute name="font-weight">bold</xsl:attribute>
+  <xsl:attribute name="font-size">12pt</xsl:attribute>
+  <xsl:attribute name="hyphenate">false</xsl:attribute>
+  <xsl:attribute name="space-after.minimum">0.4em</xsl:attribute>
+  <xsl:attribute name="space-after.optimum">0.6em</xsl:attribute>
+  <xsl:attribute name="space-after.maximum">0.8em</xsl:attribute>
+ 
+  <xsl:attribute name="text-align">center</xsl:attribute>
+</xsl:attribute-set>
+]]>
+                    </programlisting>
+                </listitem>
+                <listitem>HTML
+                    <para>对于HTML添加设置：</para>
+                    <programlisting language="xml" >
+&lt;!--================================&#x200B;============================================
+formal(figure/table/equation/example/...) setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!-- copy from docbook-xsl-ns-1.76.1\html\formal.xsl -->
+<xsl:template name="formal.object.heading">
+  <xsl:param name="object" select="."/>
+  <xsl:param name="title">
+    <xsl:apply-templates select="$object" mode="object.title.markup">
+      <xsl:with-param name="allow-anchors" select="1"/>
+    </xsl:apply-templates>
+  </xsl:param>
+ 
+  <xsl:choose>
+    <xsl:when test="$make.clean.html != 0">
+      <xsl:variable name="html.class" select="concat(local-name($object),'-title')"/>
+      <div class="{$html.class}">
+        <xsl:copy-of select="$title"/>
+      </div>
+    </xsl:when>
+    <xsl:otherwise>
+      <p class="title" align="center">
+        <b>
+          <xsl:copy-of select="$title"/>
+        </b>
+      </p>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+]]>
+                    </programlisting>
+                </listitem>
+            </orderedlist>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_figure_formal_title_align_center/">【已解决】如何设置Docbook中的图片的标题为中间对齐</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.programlisting_too_long">
+        <question>
+            <para>生成PDF中，程序代码programlisting中单行代码太长，超出页面宽度，无法显示</para>
+        </question>
+        <answer>
+            <para>解决办法：添加设置</para>
+            <programlisting language="xml" >
+<![CDATA[
+<xsl:attribute-set name="monospace.verbatim.properties">
+    <xsl:attribute name="wrap-option">wrap</xsl:attribute>
+</xsl:attribute-set>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_programlisting_single_line_code_too_long_exceed_page_width_not_show/">【已解决】Docbook生成PDF中，程序代码programlisting中单行代码太长，超出页面宽度，无法显示</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.table_in_quote">
+        <question>
+            <para>Docbook生成的pdf中，当表格在quote中时，表格头部却在底端显示，而且如果内容是多行的，还会显示出多行</para>
+        </question>
+        <answer>
+            <para>原因：是自己误用了quote所导致的。</para>
+            <para>解决办法：对于block类型的内容，如table等，应该使用blockquote而不是quote。</para>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_when_in_quote_table_header_in_bottom_and_show_multiple_line/">【已解决】Docbook生成的pdf中，当表格在quote中时，表格头部却在底端显示，而且如果内容是多行的，还会显示出多行</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.callout_bug_not_show">
+        <question>
+            <para>Docbook中的callout图片在programlisting中不显示</para>
+        </question>
+        <answer>
+            <para>原因：参考的代码是官方的，其用的是areaspec，但是xsltproc不支持areaspec，所以programlisting中不显示callout图片</para>
+            <para>解决办法：使用co，放到代码中对应位置即可。可参考如下代码：</para>
+            <programlisting language="xml" >
+<![CDATA[
+<programlistingco>
+    ...
+    chip-&gt;cmdfunc(mtd, NAND_CMD_READ0, 0x00, page); <co id="co.cmdfunc" linkends="co.note.cmdfunc"/>
+    ......
+    </programlisting>
+    <calloutlist>
+        <callout id="co.note.cmdfunc" arearefs="co.cmdfunc" >
+            <para>要读取数据，肯定是要先发送对应的读页（read page）的命令</para>
+        </callout>
+    </calloutlist>
+</programlistingco>
+]]>
+            </programlisting>
+            <para>详情参考<link xl:href="http://www.crifan.com/docbook_callout_bug_not_appear_in_programlisting/">【已解决】Docbook中的callout图片在programlisting中不显示 -&gt; xsltproc不支持areaspec</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.wider_than_available_room">
+        <question>
+            <para>An fo:block is wider than the available room in inline-progression-dimension</para>
+        </question>
+        <answer>
+            <screen>
+29, 2012 10:36:07 org.apache.fop.events.LoggingEventListener processEvent
+An fo:block  (See position 668:2859) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+29, 2012 10:36:07 org.apache.fop.events.LoggingEventListener processEvent
+Line 1 of a paragraph overflows the available area by 4390 millipoints. (See position 668:2859)
+29, 2012 10:36:08  org.apache.fop.layoutmgr.table.TableContentLayoutManager addAreas
+ tablePositions empty. Please send your FO file to fop-users@xmlgraphics.apache.org
+            </screen>
+            <para>出现类似fo:block is wider than the available room in inline-progression-dimension的问题的话，从字面上就能看出，是block比inline宽，超过界限了</para>
+            <para>我之前遇到此问题，是在不熟悉quote的用法时，将属于block类型的table等内容，放到了属于inline类型的quote中，导致上面的问题的。</para>
+            <para>详情请参考：<link xl:href="http://www.crifan.com/docbook_when_in_quote_table_header_in_bottom_and_show_multiple_line/">【已解决】Docbook生成的pdf中，当表格在quote中时，表格头部却在底端显示，而且如果内容是多行的，还会显示出多行</link></para>
+            <para>所以遇到此类问题的话，请自行去找找，是不是也误用了某些关键字，把属于block的东西，放到了属于inline中去了。</para>
+            <para>解决办法：找到误用的关键字，换成适当的关键字</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.table_column_number_overflow">
+        <question>
+            <para>TransformerException: The column-number or number of cells in the row overflows the number of fo:table-columns specified for the table</para>
+        </question>
+        <answer>
+            <screen>
+javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: The column-number or number of cells in the row overflows the number of fo:table-columns specified for the table. (See position 12:37135)
+            </screen>
+            <para>从字面上就能看出，是说明某个列数或者是单元格数目，超过了表格所定义的</para>
+            <para>比如我此处不小心写成的：</para>
+            <programlisting language="xml">
+<![CDATA[
+<table><title>USB 3.0的引脚定义</title>
+    <tgroup cols="4">
+...
+        <tbody>
+...
+            <row><entry>Shell</entry><entry>Shell</entry><entry namest="col3" nameend="col5" >Shield</entry></row>
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+            <para>即在tgroup中定义了cols列数为4，结果不小心在tbody中的某行，错写了某个entry，nameend为col5，超过了本身所定义的最多4列，因此才出现此错误。</para>
+            <para>解决办法：去对应表格中，仔细找找，肯定是有某处，不小心，写错了，导致列的书目或者是单元格的数目，超过了table的tgroup中所定义了列数了。</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.xref_para">
+        <question>
+            <para>如何通过xref（在别处）引用某个段落（para）？</para>
+        </question>
+        <answer>
+            <para>可以给para添加一个包裹层，比如用tip包裹起来para，然后给tip添加id属性，然后就可以在别处引用此para了。</para>
+            <para>后来又知道了Docbook中还有个formalpara，即正式的段落，带标题的段落</para>
+            <para>如果想要实现段落引用，个人觉得使用formalpara效果会更好，这样，段落还可以带标题。</para>
+            <para>比如我后来就遇到一个情况，希望引用别处的某段代码，其是在某个para里面的，之前的做法是专门用tip给这段programlisting包裹起来，然后给tip添加id属性，然后在别处引用此源码，现在就可以把tip换成formalpara，然后给formalpara添加id属性，这样就方便别处引用此formalpara了</para>
+            <para>解决办法：使用<link xl:href="http://www.docbook.org/tdg/en/html/formalpara.html">formalpara</link>，然后给formalpara添加id属性，即可在别处通过xref引用</para>
+        </answer>
+    </qandaentry>
+    
+    <qandaentry xml:id="qa.content_overflow_viewpoint">
+        <question>
+            <para>WARNING: Content overflows the viewport of the fo:region-body on page 9 in block-progression direction by 99828 millipoints. (See position 2:5700)</para>
+        </question>
+        <answer>
+            <para>警告说是，有些的内容显示，溢出实际所定义的范围了</para>
+            <para>出现溢出的东西，有多种，有的是表格内的文字溢出单元格，有的是图片显示超过了当前页面等等，而使得显示出来的效果，超过了其可视范围（viewpoint）</para>
+            <para>此溢出问题，有些是无关紧要的，在显示出来的效果上，也看不出有啥异常。</para>
+            <para>有些则是显示出来的效果，的确有重叠，覆盖等问题。所以，要根据实际情况而定。</para>
+            <para>解决办法：当显示效果没啥异常的话，可以忽略此警告。如果显示效果的确有问题了，则需要去找到对应的代码的位置，进行微调，比如修改表格中单元格的宽度设置等，以避免内容溢出而导致的内容显示异常问题。</para>
+        </answer>
+    </qandaentry>
+    
+    <qandaentry xml:id="qa.pdf_callout_cannot_click">
+        <question>
+            <para>PDF中callout不能点击跳转（而HTML中却可以）</para>
+        </question>
+        <answer>
+            <para>原因是fo的xsl中co的配置，对于arearef没有正确添加对应的fo:basic-link的internal-destination，导致了生成的pdf中，callout图片不带链接，无法点击。而对应的HTML的xsl配置中，有对于arearef的处理，会生成对应的href，所以HTML中是callout是可以点击的。</para>
+            <para>解决方法：给fo的xsl中添加如下配置即可：</para>
+            <programlisting language="xml">
+&lt;!--================================&#x200B;============================================
+callout setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!-- from docbook-xsl-ns-1.76.1\fo\callout.xsl -->
+<xsl:template match="d:co">
+    <!-- added by crifan start -->
+    <fo:inline>
+        <fo:basic-link>
+            <xsl:if test="@linkends">
+              <xsl:attribute name="internal-destination">
+                <xsl:value-of select="@linkends"/>
+              </xsl:attribute>
+            </xsl:if>
+    <!-- added by crifan end -->
+ 
+            <xsl:call-template name="anchor"/>
+            <xsl:apply-templates select="." mode="callout-bug"/>
+        <!-- added by crifan start -->
+        </fo:basic-link>
+        <!-- added by crifan end -->
+    </fo:inline>
+</xsl:template>
+ 
+<xsl:template match="d:coref">
+  <!-- tricky; this relies on the fact that we can process the "co" that's -->
+  <!-- "over there" as if it were "right here" -->
+ 
+  <xsl:variable name="co" select="key('id', @linkend)"/>
+  <xsl:choose>
+    <xsl:when test="not($co)">
+      <xsl:message>
+        <xsl:text>Error: coref link is broken: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:when test="local-name($co) != 'co'">
+      <xsl:message>
+        <xsl:text>Error: coref doesn't point to a co: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:otherwise>
+      <fo:inline>
+        <!-- added by crifan start -->
+        <fo:basic-link>
+            <xsl:if test="@linkend">
+              <xsl:attribute name="internal-destination">
+                <xsl:value-of select="@linkend"/>
+              </xsl:attribute>
+            </xsl:if>
+        <!-- added by crifan end -->
+            <xsl:call-template name="anchor"/>
+            <xsl:apply-templates select="$co" mode="callout-bug"/>
+        <!-- added by crifan start -->
+        </fo:basic-link>
+        <!-- added by crifan end -->
+      </fo:inline>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+ 
+<!-- from docbook-xsl-ns-1.76.1\fo\lists.xsl -->
+<xsl:template name="callout.arearef">
+  <xsl:param name="arearef"></xsl:param>
+  <xsl:variable name="targets" select="key('id',$arearef)"/>
+  <xsl:variable name="target" select="$targets[1]"/>
+ 
+  <xsl:choose>
+    <xsl:when test="count($target)=0">
+      <xsl:value-of select="$arearef"/>
+      <xsl:text>: ???</xsl:text>
+    </xsl:when>
+    <xsl:when test="local-name($target)='co'">
+      <!-- added by crifan start -->
+      <fo:basic-link>
+        <xsl:attribute name="internal-destination">
+          <xsl:value-of select="$arearef"/>
+        </xsl:attribute>
+        <!-- added by crifan end -->
+ 
+        <xsl:apply-templates select="$target" mode="callout-bug"/>
+      <!-- added by crifan start -->
+      </fo:basic-link>
+      <!-- added by crifan end -->
+    </xsl:when>
+    <xsl:when test="local-name($target)='areaset'">
+      <xsl:call-template name="callout-bug">
+        <xsl:with-param name="conum">
+          <xsl:apply-templates select="$target" mode="conumber"/>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:when test="local-name($target)='area'">
+      <xsl:choose>
+        <xsl:when test="$target/parent::d:areaset">
+          <xsl:call-template name="callout-bug">
+            <xsl:with-param name="conum">
+              <xsl:apply-templates select="$target/parent::d:areaset"
+                                   mode="conumber"/>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="callout-bug">
+            <xsl:with-param name="conum">
+              <xsl:apply-templates select="$target" mode="conumber"/>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>???</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+]]>
+            </programlisting>
+            <para>详情参考：<link xl:href="http://www.crifan.com/docbook_callout_in_pdf_can_not_click_to_jump/">【全部解决】Docbook生成的PDF中callout不能点击跳转（而HTML中却可以）</link></para>
+            <tip>
+                <para>相关的支持callout和co的internal-link，以便可以互相点击实现跳转的功能的针对docbook-xsl-ns-1.77.0版本的patch，我已经提交到docbook了：</para>
+                <link xl:href="http://sourceforge.net/tracker/?func=detail&amp;aid=3531945&amp;group_id=21935&amp;atid=373749">add internal-link support for callout and co - ID: 3531945</link>
+                <para>不知道官网会不会采纳偶的patch，会不会添加到下一个版本中呢，呵呵，期待中...</para>
+                <para>后记：对于上述我写的代码，已经被Robert Stayton修改增强后，提交了。</para>
+                <para>此处已确认，截止2013-10-04，最新版本的docbook-ns是1.78.1，已经包含了此部分的代码，从而：</para>
+                <para>不论在html或pdf中，点击callout，都可以互相跳转了。</para>
+            </tip>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.callout_not_show_in_programlisting">
+        <question>
+            <para>callout图片在programlisting的源码中不显示</para>
+        </question>
+        <answer>
+            <para>callout图片，虽然可以在callout注释中显示，但是却在programlisting的源码中不显示。</para>
+            <para>其原因在于，xsltproc不支持areaspec，而官网对于programlistingco的例子中，却用的是areaspec，结果就是按照例子写出来的代码，用xsltproc生成的结果，callout图片在源码中不显示。</para>
+            <para>解决方法：不用arespec，改用co，放在programlisting的代码中具体的位置，即可。示例代码如下：</para>
+            <example xml:id="eg.co_usage"><title>co用法示例</title>
+                <programlisting language="xml">
+<![CDATA[
+<programlistingco>
+    <programlisting language="c">
+...
+        chip-&gt;cmdfunc(mtd, NAND_CMD_READ0, 0x00, page); <co id="co.cmdfunc" linkends="co.note.cmdfunc"/>
+...
+    </programlisting>
+    <calloutlist>
+        <callout id="co.note.cmdfunc" arearefs="co.cmdfunc" >
+            <para>要读取数据，肯定是要先发送对应的读页（read page）的命令</para>
+        </callout>
+    </calloutlist>
+</programlistingco>
+]]>
+                </programlisting>
+            </example>
+            <para>详情参考：<link xl:href="http://www.crifan.com/docbook_callout_bug_not_appear_in_programlisting/">【已解决】Docbook中的callout图片在programlisting中不显示 -&gt; xsltproc不支持areaspec</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.multi_ref_single_callout">
+        <question>
+            <para>如何在（只使用co而没有使用areaspec的）源码中多个位置，指向同一个co（callout）？</para>
+        </question>
+        <answer>
+            <para>之前已经实现了源码中的callout，详见：<link xl:href="http://www.crifan.com/docbook_callout_bug_not_appear_in_programlisting/">【已解决】Docbook中的callout图片在programlisting中不显示</link></para>
+            <para>但是后来遇到的需求是，希望在源码中的多个位置，都设置同一个co</para>
+            <para>之前的临时性的办法是，使用linkends指向另一个co：</para>
+            <programlisting language="xml">
+<![CDATA[
+	.suspend<co id="co.suspend" linkends="co.note.suspend" />	= s3c24xx_nand_suspend,
+	.resume<co linkends="co.note.suspend" />		= s3c24xx_nand_resume,
+]]>
+            </programlisting>
+            <para>很明显，效果很不好。</para>
+            <para>后来无意间发现有个<link xl:href="http://www.docbook.org/tdg/en/html/coref.html">coref</link>，发现正是我想要的，对应的用法如下：</para>
+            <example><title>coref用法示例</title>
+            <programlisting language="xml">
+<![CDATA[
+	.suspend<co id="co.suspend" linkends="co.note.suspend" />	= s3c24xx_nand_suspend,
+	.resume<coref linkend="co.suspend" />		= s3c24xx_nand_resume,
+]]>
+            </programlisting>
+            </example>
+            <para>生成的HTML中的效果，如下：</para>
+            <figure id="fg.coref_in_html"><title>coref在HTML中的效果</title>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata fileref="images/coref_in_html.jpg" align="left" scalefit="0" width="100%" />
+                    </imageobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="images/coref_in_html.jpg" align="center" scalefit="1" width="100%" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>解决办法：使用coref，设置linkend属性值为某共同的co的id，即可</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.1_77_0_revhistory_table">
+        <question>
+            <para>新的docbook-xsl-ns-1.77.0生成的html中的revhistory中单元格无边框</para>
+        </question>
+        <answer>
+            <para>原因：新版的docbook-xsl-ns-1.77.0相对于旧版的docbook-xsl-ns-1.76.1，改变了<screen>&lt;xsl:template match="d:revhistory" mode="titlepage.mode"&gt;</screen>部分的设置，导致新的边框的属性的设置，只应用于整个表格，而单元格的边框没有设置。</para>
+            <para>解决办法：添加如下配置：</para>
+            <programlisting language="xml">
+&lt;!--================================&#x200B;============================================
+revhistory table setting
+================================&#x200B;=============================================--&gt;
+<![CDATA[
+<!--
+ from docbook-xsl-ns-1.77.0\html\titlepage.xsl
+has refer: http://www.w3school.com.cn/css/css_table.asp, but 'solid' not work
+ -->
+<xsl:template match="d:revhistory" mode="titlepage.mode">
+  <xsl:variable name="numcols">
+    <xsl:choose>
+      <xsl:when test=".//d:authorinitials|.//d:author">3</xsl:when>
+      <xsl:otherwise>2</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+ 
+  <xsl:variable name="id"><xsl:call-template name="object.id"/></xsl:variable>
+ 
+  <xsl:variable name="title">
+    <xsl:call-template name="gentext">
+      <xsl:with-param name="key">RevHistory</xsl:with-param>
+    </xsl:call-template>
+  </xsl:variable>
+ 
+  <xsl:variable name="contents">
+    <div>
+      <xsl:apply-templates select="." mode="common.html.attributes"/>
+      <xsl:call-template name="id.attribute"/>
+      <table>
+        <xsl:if test="$css.decoration != 0">
+          <!-- changed by crifan start -->
+          <!--
+          <xsl:attribute name="style">
+            <xsl:text>border-style:solid; width:100%;</xsl:text>
+          </xsl:attribute>
+          -->
+          <xsl:attribute name="border">
+            <xsl:text>1px solid black</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="width">
+            <xsl:text>100%</xsl:text>
+          </xsl:attribute>
+          <!-- changed by crifan end -->
+        </xsl:if>
+        <!-- include summary attribute if not HTML5 -->
+        <xsl:if test="$div.element != 'section'">
+          <xsl:attribute name="summary">
+            <xsl:call-template name="gentext">
+              <xsl:with-param name="key">revhistory</xsl:with-param>
+            </xsl:call-template>
+          </xsl:attribute>
+        </xsl:if>
+        <tr>
+          <th align="{$direction.align.start}" valign="top" colspan="{$numcols}">
+            <b>
+              <xsl:call-template name="gentext">
+                <xsl:with-param name="key" select="'RevHistory'"/>
+              </xsl:call-template>
+            </b>
+          </th>
+        </tr>
+        <xsl:apply-templates mode="titlepage.mode">
+          <xsl:with-param name="numcols" select="$numcols"/>
+        </xsl:apply-templates>
+      </table>
+    </div>
+  </xsl:variable>
+ 
+  <xsl:choose>
+    <xsl:when test="$generate.revhistory.link != 0">
+ 
+      <!-- Compute name of revhistory file -->
+      <xsl:variable name="file">
+    <xsl:call-template name="ln.or.rh.filename">
+      <xsl:with-param name="is.ln" select="false()"/>
+    </xsl:call-template>
+      </xsl:variable>
+ 
+      <xsl:variable name="filename">
+        <xsl:call-template name="make-relative-filename">
+          <xsl:with-param name="base.dir" select="$chunk.base.dir"/>
+          <xsl:with-param name="base.name" select="$file"/>
+        </xsl:call-template>
+      </xsl:variable>
+ 
+      <a href="{$file}">
+        <xsl:copy-of select="$title"/>
+      </a>
+ 
+      <xsl:call-template name="write.chunk">
+        <xsl:with-param name="filename" select="$filename"/>
+        <xsl:with-param name="quiet" select="$chunk.quietly"/>
+        <xsl:with-param name="content">
+        <xsl:call-template name="user.preroot"/>
+          <html>
+            <head>
+              <xsl:call-template name="system.head.content"/>
+              <xsl:call-template name="head.content">
+                <xsl:with-param name="title">
+                    <xsl:value-of select="$title"/>
+                    <xsl:if test="../../d:title">
+                        <xsl:value-of select="concat(' (', ../../d:title, ')')"/>
+                    </xsl:if>
+                </xsl:with-param>
+              </xsl:call-template>
+              <xsl:call-template name="user.head.content"/>
+            </head>
+            <body>
+              <xsl:call-template name="body.attributes"/>
+              <xsl:copy-of select="$contents"/>
+            </body>
+          </html>
+          <xsl:text>&#x0a;</xsl:text>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:copy-of select="$contents"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+]]>
+            </programlisting>
+            <para>详情参考：<link xl:href="http://www.crifan.com/new_77_0_stylesheet_revhistory_table_cell_no_border/">【已解决】新的docbook-xsl-ns-1.77.0生成的html中的revhistory中单元格无边框</link></para>
+        </answer>
+    </qandaentry>
+    
+    <qandaentry xml:id="qa.glyph_not_available">
+        <question>
+            <para>WARNING: Glyph "?" (0x21b5, carriagereturn) not available in font "MicrosoftYaHei".</para>
+        </question>
+        <answer>
+            <para>原因：某些个人的特殊字符，此处为Unicode值为0x21b5的特殊的回车键形状的字符：<phrase role="symbol">&crarr;</phrase>，对应的字体无法显示，所以报错。</para>
+            <para>解决办法：给该特殊字符添加role="xxx",其中xxx为别的某种类型的字体。比如，将原先的源码：</para>
+            <programlisting language="xml">
+<![CDATA[
+<para>回车（&crarr;）后再输入：</para>
+]]>
+            </programlisting>
+            <para>改为：</para>
+            <programlisting language="xml">
+<![CDATA[
+<para>回车（<phrase role="symbol">&crarr;</phrase>）后再输入：</para>
+]]>
+            </programlisting>
+            <para>详情参考：<link xl:href="http://www.crifan.com/docbook_fop_glyph_not_avaliable_in_font/">【已解决】Docbook用fop生成pdf过程中出现警告：WARNING: Glyph "?" (0x21b5, carriagereturn) not available in font "MicrosoftYaHei".</link></para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.add_note_for_table">
+        <question>
+            <para>如何实现给table中（多个）特定位置添加相应的注释？</para>
+        </question>
+        <answer>
+            <para>有两种办法：</para>
+            <orderedlist>
+                <listitem><emphasis>xreflabel + note/tip</emphasis>
+                    <para>通过使用xreflabel的方法，加入到table中特定位置。然后注释部分的内容放在table之外的tip或note中。</para>
+                    <para>缺点是，很不方便用户使用，不直观</para>
+                    <para>参考代码：</para>
+                    <programlisting language="xml">
+<![CDATA[
+<table>
+    <row>...<entry><xref linkend="channel_mode"/>(两个单声道)</entry>...</row>
+......
+</table>
+<tip id="channel_mode" xreflabel="双声道">
+    <title>双声道</title>
+    双声道文件由两个独立的单声道所组成。大多数解码器把双声道输出成立体声，但是实际上，不是所有的双声道都是立体声的。
+</tip>
+]]>
+                    </programlisting>
+                    <para>关于xreflabel，更详细的解释，请参考官网的<link xl:href="http://www.sagehill.net/docbookxsl/CrossRefs.html#LinkingFromOther">Linking from other elements</link></para>
+                </listitem>
+                <listitem><emphasis>co + calloutlist + callout</emphasis>
+                    <para>在table的对应位置使用co，然后在table之外的calloutlist和callout中添加对应的注释内容。</para>
+                    <para>优点是，可以支持自动编号，且可互相点击跳转。</para>
+                    <para>参考代码：</para>
+                    <programlisting language="xml">
+<![CDATA[
+<table><title>xxx</title>
+    <tgroup cols="6">
+...
+        <thead>
+            <row>...<entry>控制字符<co id="co.ctrl_char" linkends="co.note.ctrl_char" /></entry>...</row>
+        </thead>
+ 
+        <tbody>
+...
+        </tbody>
+    </tgroup>
+</table>
+<calloutlist>
+    <callout id="co.note.ctrl_char" arearefs="co.ctrl_char">
+        <para>即在C语言中或其他地方如何表示。</para>
+    </callout>
+</calloutlist>
+]]>
+                    </programlisting>
+                    <para>详情参考：<link xl:href="http://www.crifan.com/docbook_good_method_add_note_for_table/">【已解决】找到更好的方法，给Docbook中的表格（table）添加注释（note） -&gt; 用co（和calloutlist，callout）</link></para>
+                </listitem>
+            </orderedlist>
+        </answer>
+    </qandaentry>
+
+</qandaset>
+</chapter>

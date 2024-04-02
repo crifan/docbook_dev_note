@@ -1,0 +1,489 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch02_notes"
+    >
+<title>Docbook开发过程中的注意事项和心得</title>
+<abstract></abstract>
+    
+    <sect1 xml:id="docbook4_vs_docbook5"><title>Docbook 4和Docbook 5的区别</title>
+        <para>其实对于普通的Docbook的使用者来说，其实不必关心如何从Docbook4转到Docbook5，但是对于像我之前借鉴别人的docbook的xml去写docbook的源码的话，就需要关注一下了。</para>
+        <para>因为之前的很多Docbook的元素（Element），其实都是Docbook5之前的，所以现在是在用Docbook5的框架，但是却使用了部分的之前的元素。因此，需要列出一些需要注意的事项。</para>
+        <para>此处列出几个在使用时候需要注意事情：</para>
+        <orderedlist>
+            <listitem>记得要给book，article等添加命名空间：
+                <programlisting language="xml">
+<![CDATA[
+<?xml version="1.0"?>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0">
+...
+]]>
+                </programlisting>
+            </listitem>
+            <listitem>ulink被link取代了
+                <para>关于交叉引用，link等方面的改变，去看<link xl:href="http://docbook.org/docs/howto/#changes-linking">Improved cross-referencing and linking</link></para>
+            </listitem>
+            <listitem>bookinfo，articleinfo等都被info取代了
+                <para>关于更多的改变了名字的元素，去看<link xl:href="http://docbook.org/docs/howto/#changes-renamed">Renamed elements</link></para>
+                <para>关于更多在docbook5中去除了的元素，去看<link xl:href="http://docbook.org/docs/howto/#changes-removed">Removed elements</link></para>
+            </listitem>
+            <listitem>支持了用alt和annotation给元素添加注释</listitem>
+            <listitem>新加了XSLT 2.0的支持</listitem>
+        </orderedlist>
+        <para></para>
+        <para>更多详细的内容，请参考：<link xl:href="http://www.sagehill.net/docbookxsl/Db5Tools.html#Db5Diffs">DocBook 5 differences</link></para>
+    </sect1>
+    
+    <sect1 xml:id="entity_definition"><title>关于实体定义</title>
+        <para>如果想要输入一些特殊字符的话，那么可以考虑使用实体（Entity）定义。</para>
+        <para>比如：</para>
+        <itemizedlist>
+            <listitem>用<emphasis>&amp;rArr;</emphasis>来表示双等号右箭头：&rArr;</listitem>
+            <listitem>用<emphasis>&amp;TRADE;</emphasis>来表示trademark商标：&TRADE;</listitem>
+            <listitem>用<emphasis>&amp;harr;</emphasis>来表示单横线双向箭头：<phrase role="symbol">&harr;</phrase></listitem>
+        </itemizedlist>
+        <para>而对这类特殊字符，之前是通关使用自己单独定义的crl.ent文件而实现的。其包含如下内容：</para>
+        <programlisting language="xml">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- more can refer: http://barzilai.org/math_sym.htm -->
+<!ENTITY larr   "&#x2190;"> <!-- ← -->
+<!ENTITY rarr   "&#x2192;"> <!-- → -->
+<!ENTITY darr   "&#x2193;"> <!-- ↓ -->
+<!ENTITY uarr   "&#x2191;"> <!-- ↑ -->
+<!ENTITY harr   "&#x2194;"> <!-- <-> -->
+<!ENTITY crar   "&#x21B5;"> <!-- <_| -->
+<!ENTITY lArr   "&#x21D0;"> <!-- <= -->
+<!ENTITY uArr   "&#x21D1;"> <!-- /||\ -->
+<!ENTITY rArr   "&#x21D2;"> <!-- => -->
+<!ENTITY dArr   "&#x21D3;"> <!-- \||/ -->
+<!ENTITY hArr   "&#x21D4;"> <!-- <=> -->
+
+]]>
+        </programlisting>
+        <para>但是实际上，对于这些字符，官网已经有了标准的定义了。</para>
+        <para>然后在参考了<link xl:href="http://docbook.org/docs/howto/#faq-authoring-general-entities" />，得知如下地址中有全部的定义：</para>
+        <para><link xl:href="http://www.w3.org/2003/entities/2007/w3centities-f.ent" /></para>
+        <para>对应的，<link xl:href="http://www.w3.org/2003/entities/2007/" />中，也有其他相关的ent文件。</para>
+        <para>其中，也可以看到那个很常见的，包含了全部定义的文件：<link xl:href="http://www.w3.org/2003/entities/2007/w3centities.ent" /></para>
+        <para>更多关于实体定义的解释，可以去看：<link xl:href="http://www.w3.org/2003/entities/">XML Entity Declarations for Characters</link></para>
+        <para></para>
+        <para>而知道了有这么好的资源，就可以直接利用了，即，将上面的那个文件，改成：</para>
+        <programlisting>
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- refer: http://docbook.org/docs/howto/#faq-authoring-general-entities -->
+<!ENTITY % allent SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent">
+%allent;
+
+]]>
+        </programlisting>
+        <para>即可包含了全部的各种特殊字符的定义了，这样也就可以随处引用这些特殊字符了。</para>
+        <para>当然对于上述文件，每次都是需要联网下载w3centities-f.ent的，所以，为了不依赖网络和加快速度，可以下载w3centities-f.ent到本地，放在和crl.ent同文件夹下，然后crl.ent就可以再改为这样既可：</para>
+        <programlisting language="xml">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY % allent SYSTEM "w3centities-f.ent">
+%allent;
+]]>
+        </programlisting>
+    </sect1>
+
+    <sect1 xml:id="qanda_usage"><title>qanda系列的用法</title>
+        <para>QA相关的关键字包括：qandaset，qandadiv，qandaentry，question，answer</para>
+        <para>其相关的用法举例，自己去参考官网的解释：<link xl:href="http://www.docbook.org/tdg/en/html/qandaset.html">qandaset</link></para>
+        <para>此处需要特别提示的是，对于qandadiv和qandaentry等，是不能随便放在某个section,sect1,para等之下使用的</para>
+        <para>我就是没注意，结果折腾了半天，始终出现错误：</para>
+        <screen>
+org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"! (See position 29:6604)
+javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"! (See position 29:6604)
+        at org.apache.fop.cli.InputHandler.transformTo(InputHandler.java:302)
+        at org.apache.fop.cli.InputHandler.renderTo(InputHandler.java:130)
+        at org.apache.fop.cli.Main.startFOP(Main.java:174)
+        at org.apache.fop.cli.Main.main(Main.java:205)
+Caused by: javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"! (See position 29:6604)
+        at org.apache.xalan.transformer.TransformerIdentityImpl.transform(&#x200B;TransformerIdentityImpl.java:501)
+        at org.apache.fop.cli.InputHandler.transformTo(InputHandler.java:299)
+        ... 3 more
+        </screen>
+        <para>结果始终不知道错在哪里，调试到最后，终于发现了，原来是<emphasis>qandaset等关键字，只能在chapter,article等之下使用，不能随便放在某个section,sect1,para等之下使用</emphasis></para>
+        <para>所以，不要像我一样，想要在别处使用，导致始终出错，浪费了很长时间。。。</para>
+    </sect1>
+
+    <sect1 xml:id="fop_notes"><title>FOP相关注意事项</title>
+        <sect2 xml:id="fop_font_config"><title>FOP的字体设置</title>
+            <para>关于FOP的字体的设置，对于最新版本的1.0的FOP来说，其设置很简单，参考官网的解释：<link xl:href="http://xmlgraphics.apache.org/fop/1.0/fonts.html#custom">Apache™ FOP: Fonts - Custom Fonts</link>，只需要在配置文件<filename>fop.xconf</filename>中的renderers→renderer→fonts中，添加如下内容即可。</para>
+            <programlisting language="xml">
+<![CDATA[
+        <directory recursive="true">file:///c:/windows/fonts/</directory>
+        <auto-detect/>
+]]>
+            </programlisting>
+            <para>而与此相比，之前旧版本的FOP对于字体的设置，则相对比较繁琐，因为除了要用对应的命令去生成字体文件所对应的Metric文件之外，还要把相关配置添加到上述<filename>fop.xconf</filename>中去。</para>
+            <para>打开windows下面的cmd，然后切换到对应的fop的根目录，执行下面的命令：</para>
+            <screen>
+java -cp build\fop.jar;lib\avalon-framework-4.2.0.jar;lib\commons-logging-1.0.4.jar;lib\commons-io-1.3.1.jar;lib\xmlgraphics-commons-1.4.jar org.apache.fop.fonts.apps.TTFReader -ttcname SimHei C:\Windows\Fonts\simhei.ttf fonts\simhei.xml
+
+java -cp build\fop.jar;lib\avalon-framework-4.2.0.jar;lib\commons-logging-1.0.4.jar;lib\commons-io-1.3.1.jar;lib\xmlgraphics-commons-1.4.jar org.apache.fop.fonts.apps.TTFReader -ttcname msyh C:\Windows\Fonts\msyh.ttf fonts\msyh.xml
+
+java -cp build\fop.jar;lib\avalon-framework-4.2.0.jar;lib\commons-logging-1.0.4.jar;lib\commons-io-1.3.1.jar;lib\xmlgraphics-commons-1.4.jar org.apache.fop.fonts.apps.TTFReader -ttcname msyhbd C:\Windows\Fonts\msyhbd.ttf fonts\msyhbd.xml
+            </screen>
+            <para>就可以生成相应的字体的XML Metrics文件了，然后再把相应的如下的设置：</para>
+            <programlisting language="xml">
+<![CDATA[
+        <font metrics-url="E:\Dev_Root\docbook\dev\config\fop\fonts\simhei.xml" kerning="yes" embed-url="C:\Windows\Fonts\simhei.ttf">
+            <font-triplet name="SimHei" style="normal" weight="normal"/>
+            <font-triplet name="SimHei" style="normal" weight="bold"/>
+            <font-triplet name="SimHei" style="italic" weight="normal"/>
+            <font-triplet name="SimHei" style="italic" weight="bold"/>
+        </font>
+
+        <font metrics-url="E:\Dev_Root\docbook\dev\config\fop\fonts\msyh.xml" kerning="yes" embed-url="C:\Windows\Fonts\msyh.ttf">
+          <font-triplet name="msyh" style="normal" weight="normal"/>
+          <font-triplet name="msyh" style="normal" weight="bold"/>
+          <font-triplet name="msyh" style="italic" weight="normal"/>
+          <font-triplet name="msyh" style="italic" weight="bold"/>
+        </font>
+        
+        <font metrics-url="E:\Dev_Root\docbook\dev\config\fop\fonts\msyhbd.xml" kerning="yes" embed-url="C:\Windows\Fonts\msyhbd.ttf">
+          <font-triplet name="msyhbd" style="normal" weight="normal"/>
+          <font-triplet name="msyhbd" style="normal" weight="bold"/>
+          <font-triplet name="msyhbd" style="italic" weight="normal"/>
+          <font-triplet name="msyhbd" style="italic" weight="bold"/>
+        </font>
+
+        <directory recursive="true">file:///c:/windows/fonts/</directory>
+        <auto-detect/>
+]]>
+            </programlisting>
+            <para>添加到<filename>fop.xconf</filename>中去。</para>
+            <para></para>
+        </sect2>
+    </sect1>
+
+    <sect1 xml:id="docbook_dev_notes"><title>Docbook开发过程中的一些有用的提示</title>
+        <sect2 xml:id="docbook_best_practice"><title>Docbook最佳实践</title>
+            <para>此处总结一些，在写docbook源码的时候，一些常见的做法。</para>
+            <para>这些做法，多数都是我自己总结出来的，仅作参考。</para>
+            <sect3 xml:id="docbook_id_abbrev"><title>Docbook中id的命名规则</title>
+                <para>在给docbook的元素添加id（或xml:id）属性的时候，名字的命名，我的做法是：</para>
+                <table xml:id="tbl.docbook_id_abbrev"><title>Docbook中id命名规则</title>
+                    <tgroup cols="3">
+                        <colspec colnum="1" colname="col1" colwidth="1*" />
+                        <colspec colnum="2" colname="col2" colwidth="1*" />
+                        <colspec colnum="3" colname="col3" colwidth="6*" />
+                        
+                        <thead>
+                            <row><entry>Docbook元素</entry><entry>id命名规则</entry><entry>举例</entry></row>
+                        </thead>
+                        
+                        <tbody>
+                            <row><entry>figure</entry><entry>fg.xxx</entry><entry><programlisting><![CDATA[<figure xml:id="fg.npp_code_collapse"><title>XML文件中的Notepad++的代码折腾功能</title>]]></programlisting></entry></row>
+                            <row><entry>table</entry><entry>tbl.xxx</entry><entry><programlisting><![CDATA[<table xml:id="tbl.docbook_id_abbrev"><title>Docbook中id命名规则</title>]]></programlisting></entry></row>
+                            <row><entry>example</entry><entry>eg.xxx</entry><entry><programlisting><![CDATA[<example xml:id="eg.npp_show_special_char"><title>Notepad++可以查看特殊字符的用途举例</title>]]></programlisting></entry></row>
+                            <row><entry>某section</entry><entry>xxx</entry><entry><programlisting><![CDATA[<sect1 xml:id="docbook_dev_notes"><title>Docbook开发过程中的一些有用的提示</title>]]></programlisting></entry></row>
+                            <row><entry>co和callout</entry><entry>co.xxx和co.note.xxx</entry><entry>
+                                <programlisting>
+<![CDATA[
+<programlistingco>
+    <programlisting>
+    ...
+&lt;revhistory<co id="co.revh" linkends="co.note.revh" /> text-align="left"
+    ...
+    </programlisting>
+    <calloutlist>
+        <callout id="co.note.revh" arearefs="co.revh">
+            ...
+        </callout>
+        ...
+    </calloutlist>
+</programlistingco>
+]]>
+                                </programlisting></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+                <para></para>
+            </sect3>
+        </sect2>
+    
+        <orderedlist>
+                <listitem>最新的stylesheet：xsl-ns
+                    <para>想要去下载最新的xsl-ns，可以去这里下载：<link xl:href="http://docbook.sourceforge.net/snapshots/">DocBook Project Snapshots</link>，其中有最新的xsl-ns下载。</para>
+                </listitem>
+                <listitem>参数
+                    <para><filename class="directory">docbook-xsl-ns-1.76.1\fo</filename>下面，有个<filename>param.xsl</filename>，该文件是对应的<filename>param.xml</filename>生成出来的。</para>
+                    <para>该文件中包括了，所有的参数的默认的设置。而对应的每一个参数，都还有一个对应的配置文件，都放在了<filename class="directory">docbook-xsl-ns-1.76.1\params</filename>路径下了。</para>
+                    <para>之所以说这个，是因为，关于各种参数的配置，最开始是没有头绪，找不到哪些内容都有哪些参数去控制输出的效果。现在找到了这些，就可以在遇到问题的时候，来找找这些参数了。</para>
+                </listitem>
+                <listitem>NS=namespace
+                    <para>关于xsl配置文件，之前叫做docbook-xsl-1.76.1，后来又有个docbook-xsl-ns-1.76.1</para>
+                    <para>其中的ns，意思是namespace的意思，即支持命名空间版本的xsl</para>
+                </listitem>
+                <listitem>formal的含义
+                    <para>参考<link xl:href="http://www.sagehill.net/docbookxsl/Graphics.html">Graphics</link>而知道了之前就想要知道的formal的含义：formal是包含了figure, table, example和equation的</para>
+                </listitem>
+                <listitem>只包含部分内容
+                    <para>根据<link xl:href="http://www.sagehill.net/docbookxsl/ProcesingDb5.html">Using XIncludes with DocBook 5</link>中的描述，如果想要只包含（include）某个xml文件的其中一部分内容，比如某个章节，也是可以通过include相应的xml:id去实现的此需求的。</para>
+                    <para>详情参考：<link xl:href="http://www.sagehill.net/docbookxsl/ModularDoc.html#UsingXinclude">Selecting part of a file</link></para>
+                </listitem>
+                <listitem>关于xml文件中，为何不直接写id而要写xml:id
+                    <para>之前一直没搞懂，为何很多地方，在解释在xml文件中的添加某个id的时候，写成xml:id，而为何不直接写id，毕竟很多地方，也都是这么写的，为何还非要麻烦地写成xml:id呢？</para>
+                    <para>后来在学习了<link xl:href="http://www.w3school.com.cn/xml/xml_namespaces.asp">xml的命名空间namespace</link>之后，才知道，原来为由于docbook5中，会通过：</para>
+                    <programlisting>
+<![CDATA[
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    >
+]]>
+                    </programlisting>
+                    <para>的写法，设置默认的命名空间（default namespace）为http://docbook.org/ns/docbook，通过也添加了xi和xl的命令空间。</para>
+                    <para>因此，在xml文件中，如果直接写id的话，其实意味着是属于docbook的属性的id，此处由于id没有和其他关键字冲突，所以，xml:id和id都是可以的，只是前者更加能保证不会发生关键字冲突。</para>
+                    <para>相应的，如果是别的某个关键字，而多个域名中都可能会出现，则必须要添加对应的命名空间的前缀了。</para>
+                    <para>比如我之前遇到的，将ulink改为link的时候，在写&lt;link xl:href="xxx"&gt;的时候，如果写成&lt;link href="xxx"&gt;，即没有加xl的命名空间的话，则生成出来的HTML和PDF中，都是没有链接的效果的，必须写成xl:href才可以的。</para>
+                    <para>所以，更好的习惯，还是写成xml:id之类的，添加了命名空间的形式，这样更加准确，也可以避免未来可能的和其他命名空间发生关键字冲突的问题。</para>
+                </listitem>
+        </orderedlist>
+    </sect1>
+
+    <sect1 xml:id="docbook_debug"><title>Docbook开发过程中如何调试错误</title>
+        <para>在Docbook开发过程中，难免会出现各种各样的错误。</para>
+        <para>遇到常见的错误的话，可以去参考我所总结的：<xref linkend="ch03_faq" /></para>
+        <para>但是有时候会遇到一些相对比较复杂的问题。</para>
+        <sect2 xml:id="example_docbook_debug_pdf"><title>举例说明如何实现方便地调试Docbook生成pdf过程中所出现的错误</title>
+            <para>比如，我所遇到的，一个docbook的xml源文件，本身就有500多行，内容很多。</para>
+            <para>此时，编译生成pdf过程中，生成fo的时候出错：</para>
+            <screen>
+javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "fo:table" is missing child elements. Required content model: (marker*,table-column*,table-header?,table-footer?,table-body+) (See position 27:127554)
+        at org.apache.fop.cli.InputHandler.transformTo(InputHandler.java:302)
+        at org.apache.fop.cli.InputHandler.renderTo(InputHandler.java:130)
+        at org.apache.fop.cli.Main.startFOP(Main.java:174)
+        at org.apache.fop.cli.Main.main(Main.java:205)
+            </screen>
+            <para>其中可以看出，已经明确指出了出错的具体位置：<emphasis>27:127554</emphasis></para>
+            <para>即，错误行号linenumber是27，行内偏移量offset为127554</para>
+            <formalpara xml:id="debug_fo_no_indent"><title>调试无缩进的（xml格式的）fo文件</title>
+                <para>但是，当你去用<application>Notepad++</application>打开fo文件的话，所看到的内容是这样的：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/no_hl_fo_source.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/no_hl_fo_source.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>然后去通过选择：<keycap>语言 &rarr; XML</keycap>，进行语法高亮后，变成：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/with_hl_fo_src.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/with_hl_fo_src.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>虽然容易看清代码了。但是很明显，代码整体上非常乱，因为没有缩进，很多内容都集中到同一行中显示了。</para>
+                <para>这是因为之前对于fo所用的设置为：</para>
+                <programlisting language="xml">
+<![CDATA[
+<xsl:output method="xml"
+            encoding="UTF-8"
+            indent="no"/>
+]]>
+                </programlisting>
+                <para>即，制定了输出的xml中，indent为no，即没有缩进，导致生成的（xml类型的）fo文件，内容都显示到一行中，显得很乱。</para>
+                <para>在此种情况下，如果想要去调试的话，就只能是这样做：</para>
+                <para>在Notepad++中，用搜索<phrase role="symbol">&rarr;</phrase>行定位...(Ctrl+G)，调出跳转对话框，选择“行”，然后输入错误行号，此处为27：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/ctl_g_input_line_number.png" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/ctl_g_input_line_number.png" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>然后点击"定位"就可以跳转到27行了。</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/no_indent_one_line_too_content.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/no_indent_one_line_too_content.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>可以看出，仅仅是单一的27行，其内容已经太多了，多到鼠标也要拖动很多个屏幕，才能完全选中此行的内容。</para>
+                <para>选中后，然后将此行的拷贝出来，放到新建的文件中去：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/copy_out_that_line.gif" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/copy_out_that_line.gif" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>然后再去定位到行尾偏移量127554的位置：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/ctl_g_input_line_offset.png" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/ctl_g_input_line_offset.png" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>找到出错的位置：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/can_found_err_pos.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/can_found_err_pos.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>可以看出，此处即使找到了所指示的出错位置，也很难找到具体错在哪里。因为代码实在太多，很难找到是哪里错误的。</para>
+            </formalpara>
+            <formalpara xml:id="debug_fo_with_indent"><title>调试有缩进的（xml格式的）fo文件</title>
+                <para>对于上述所面临的很难定位错误的问题，解决办法是，配置xml格式的fo的输出中，是带代码缩进的：</para>
+                <programlisting language="xml">
+<![CDATA[
+<xsl:output method="xml"
+            encoding="UTF-8"
+            indent="yes"/>
+]]>
+                </programlisting>
+                <para>这样，生成的xml格式的fo文件，就变成这样了：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/fo_src_with_indent.gif" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/fo_src_with_indent.gif" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>对应的出错的提示中，行号和行内位置，也都变了：</para>
+                <screen>
+javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "fo:table" is missing child elements. Required content model: (marker*,table-column*,table-header?,table-footer?,table-body+) (See position 7594:441)
+        at org.apache.fop.cli.InputHandler.transformTo(InputHandler.java:302)
+        at org.apache.fop.cli.InputHandler.renderTo(InputHandler.java:130)
+        at org.apache.fop.cli.Main.startFOP(Main.java:174)
+        at org.apache.fop.cli.Main.main(Main.java:205)
+                </screen>
+                <para>变成错误行号是7594，行内偏移量是441了。</para>
+                <para>然后就去跳转到对应的行：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/ctrl_g_line_7594.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/ctrl_g_line_7594.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>找到错误的位置：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/error_line_7594.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/error_line_7594.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>然后类似的，把整行内容拷贝出来，然后再去跳转到行内位置441：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/ctrl_g_offset_441.jpg" scalefit="0" width="100%" /></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/ctrl_g_offset_441.jpg" scalefit="1" width="100%" /></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <para>这样，在不是很多的一行内，就很容易找到对应错误位置，然后具体分析错误的原因了。</para>
+            </formalpara>
+        </sect2>
+        <para>总结一下就是，对于fo文件的话，想要调试的话，记得设置输出的indent为yes：</para>
+        <programlisting language="xml">
+<![CDATA[
+<xsl:output method="xml"
+            encoding="UTF-8"
+            indent="no"/>
+]]>
+        </programlisting>
+        <para>这样生成的fo中就是带缩进的了，格式就很清晰了，就容易找错误位置，方便调试错误了。</para>
+    </sect1>
+    
+    <sect1 xml:id="docbook_summary"><title>Docbook开发过程中的一些感悟</title>
+        <sect2 xml:id="docbook_focus_content"><title>Docbook更关注内容</title>
+            <para>使用Docbook越多，越加发现，Docbook的确只是更加让你关注文章的内容如何写，而对于输出到底是什么样子的，就不需要让你关注了。</para>
+            <para>好处是可以让你把精力集中在文章的内容上，坏处是有时候，我可能会关注一下具体的输出效果，某些需要特别注明的字体的颜色高亮等设置，就没法方便的设置了。</para>
+            <para>但是总体还是利大于弊的。更多关注文章内容，而非文章的显示效果，可能更加有利于文章的最终的传播。</para>
+        </sect2>
+        
+        <sect2 xml:id="docbook_vs_building"><title>Docbook与盖楼</title>
+            <para>最近在折腾docbook，其内容总体来说包括两方面，一是搭建docbook的全套环境，而是完成每个book的xml源码。</para>
+            <para>突然想到，其实这个过程，就像在是盖楼。</para>
+            <para>搭建docbook的环境，就是建摩天大楼之前的打地基，这部分是最基础，也是最重要的。</para>
+            <para>基础没有建好，楼是盖不起来的。</para>
+            <para>建好了地基，再去一层层的盖楼，就是完成每本book的xml源码的过程。</para>
+            <para>而此处完成每本book的xml源码，和建造每层楼，又有点不同。</para>
+            <para>目前已经写好的20左右本book，每本的内容都完全不一样，虽然表现形式上，都算是一样的，符合docbook的定义而已。</para>
+            <para>而且每本book的内容，大小不同，换成楼层的层高的话，有的层高是只有3,5米，有的层高可能要达到30,50米。</para>
+            <para>总的说来，完成docbook环境和这么多book的内容，就像建好了地基，建了20多层的楼。</para>
+            <para>之后对docbook环境的微调，就像是在不同的细节方面，加固和完善地基。</para>
+            <para>而再写新的book，就相当于再建一层楼了。</para>
+            <para>而对于已写好的book的内容的增添修改，就相当于对于建好的楼层的内部装修，优化布局等细节处理了。</para>
+            <para>所以，之后要继续做的事情，就是继续加固地基，优化已有楼层，建新楼了。</para>
+            <para></para>
+            <para>另外，如果之后开始折腾替换已有xsltproc为Saxon的话，就相当于又找了个新的建筑方法，从新搭建另外一个地基了。</para>
+        </sect2>
+    </sect1>
+
+    <sect1 xml:id="dobook_evolution_process"><title>Docbook环境进化过程简单记录</title>
+        <para>此处简单记录一下，整个docbook环境，从无到有，到后期优化的大概进化过程：</para>
+        <orderedlist>
+            <listitem><emphasis>参考别人教程，可以编译HTML</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>可以编译PDF了</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>编写了一个统一的make，支持html，htmls，pdf，txt，chm，rtf</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>添加了make release支持</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>以最少改动去支持home和office</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>把system的图片统一提取出去</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>把css统一提取出去</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>支持make两种版本local和release的时候对应链接地址不同</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>支持从books目录下，对全局的books进行make操作</emphasis>
+                <para></para>
+                <para></para>
+                <para></para>
+            </listitem>
+            <listitem><emphasis>添加了对于HTML中加入js代码实现统计页面访问次数的功能</emphasis>
+                <para><link xl:href="http://www.crifan.com/docbook_add_code_to_statistic_static_html_page_view/">【已解决】给Docbook生成的静态HTML页面添加统计访问次数的代码</link></para>
+            </listitem>
+            <listitem><emphasis>升级到docbook-ns-1.78.1</emphasis>
+                <para><link xl:href="http://www.crifan.com/docbook_xsl_ns_upgrade_from_1_77_1_to_latest_1_78_1/">【记录】将docbook的xsl-ns从当前的docbook-xsl-ns-1.77.1升级到docbook-xsl-ns-1.78.1</link></para>
+            </listitem>
+        </orderedlist>
+        <para></para>
+    </sect1>
+</chapter>

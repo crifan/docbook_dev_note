@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE appendix
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+<appendix 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+
+    xml:id="appendix">
+
+<title>已通过Docbook发布的资料</title>
+
+<sect1 xml:id="docbook_released_basic"><title>基础知识相关</title>
+    <orderedlist>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/char_encoding/release/html/char_encoding.html">字符编码详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/soft_dev_basic/release/html/soft_dev_basic.html">软件开发基础知识</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/language_summary/release/html/language_summary.html">各种计算机语言简介和总结</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/json_tutorial/release/html/json_tutorial.html">JSON详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/regular_expression/release/html/regular_expression.html">正则表达式学习心得</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/programming_language_basic/release/html/programming_language_basic.html">计算机编程语言基础知识</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/web_scrape_emulate_login/release/html/web_scrape_emulate_login.html">详解抓取网站，模拟登陆，抓取动态网页的原理和实现（Python，C#等）</link></listitem>
+    </orderedlist>
+</sect1>
+
+<sect1 xml:id="docbook_released_embedded"><title>嵌入式相关</title>
+    <orderedlist>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/linux_nand_driver/release/html/linux_nand_driver.html">【详解】如何编写Linux下Nand Flash驱动</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/uboot_starts_analysis/release/html/uboot_starts_analysis.html">Uboot中start.S源码的指令级的详尽解析</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/mpeg_vbr/release/html/mpeg_vbr.html">MPEG简介 + 如何计算CBR和VBR的MP3的播放时间</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/nand_get_type/release/html/nand_get_type.html">Linux MTD下获取Nand flash各个参数的过程的详细解析</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/linux_wireless/release/html/linux_wireless.html">如何在Linux下写无线网卡的驱动</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/firmware_download/release/html/firmware_download.html">【详解】嵌入式开发中固件的烧录方式</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/runtime_upgrade_linux/release/html/runtime_upgrade_linux.html">在Linux运行期间升级Linux系统（Uboot+kernel+Rootfs）</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/binutils_intro/release/html/binutils_intro.html">GNU Binutils详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/cross_compile/release/html/cross_compile.html">交叉编译详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/crosstool_ng/release/html/crosstool_ng.html">crosstool-ng详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/usb_basic/release/html/usb_basic.html">USB基础知识概论</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/usb_disk_driver/release/html/usb_disk_driver.html">如何实现Linux下的U盘（USB Mass Storage）驱动</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/usb_hid/release/html/usb_hid.html">USB HID Learning Record</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/dma_pl08x_analysis/release/html/dma_pl08x_analysis.html">详解ARM的AMBA设备中的DMA设备PL08X的Linux驱动</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/hardware_basic/release/html/hardware_basic.html">硬件电路基础知识</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/arm_vs_mips/release/html/arm_vs_mips.html">ARM与MIPS的详细对比</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/interrupt_related/release/html/interrupt_related.html">【详解】中断相关的知识</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/fieldbus_intro/release/html/fieldbus_intro.html">现场总线Field Bus简析</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/symbology_code128/release/html/symbology_code128.html">Code 128 Symbology Introduction</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/symbology_gs1128/release/html/symbology_gs1128.html">GS1-128条形码和相关的AI及FNC1的详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/symbology_plessey/release/html/symbology_plessey.html">Plessey &amp; MSI Symbology Introduction</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/symbology_upc/release/html/symbology_upc.html">UPC/UPC-A/UPC-E &amp; EAN Barcode Symbology</link></listitem>
+    </orderedlist>
+</sect1>
+
+<sect1 xml:id="docbook_released_upper"><title>上层软件相关</title>
+    <orderedlist>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/docbook_dev_note/release/html/docbook_dev_note.html">Docbook开发手记</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/build_website/release/html/build_website.html">建设网站详细教程</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/website_transfer/release/html/website_transfer.html">网站搬家详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/crifanlib_csharp/release/html/crifanlib_csharp.html">详解crifan的C#库：crifanLib.cs</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/csharp_summary/release/html/csharp_summary.html">C#学习心得</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/python_summary/release/html/python_summary.html">Python语言总结</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/python_beginner_tutorial/release/html/python_beginner_tutorial.html">python初级教程：入门详解</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/python_intermediate_tutorial/release/html/python_intermediate_tutorial.html">python中级教程：开发总结</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/python_topic_str_encoding/release/html/python_topic_str_encoding.html">Python专题教程：字符串和字符编码</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/python_topic_web_scrape/release/html/python_topic_web_scrape.html">Python专题教程：抓取网站，模拟登陆，抓取动态网页</link></listitem>
+    </orderedlist>
+</sect1>
+
+<sect1 xml:id="docbook_released_other"><title>其他</title>
+    <orderedlist>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/crifan_rec_soft/release/html/crifan_rec_soft.html">crifan推荐软件</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/rec_soft_npp/release/html/rec_soft_npp.html">【crifan推荐】轻量级文本编辑器，Notepad最佳替代品：Notepad++</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/english_learn/release/html/english_learn.html">英语学习笔记</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/buy_house/release/html/buy_house.html">买房详细教程</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/compute_basic/release/html/compute_basic.html">电脑基础知识教程</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/virutal_machine_tutorial/release/html/virutal_machine_tutorial.html">虚拟机教程</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/virtualbox_tutorial/release/html/virtualbox_tutorial.html">VirtualBox教程</link></listitem>
+        <listitem><link xl:href="http://www.crifan.com/files/doc/docbook/vmware_tutorial/release/html/vmware_tutorial.html">VMWare教程</link></listitem>
+    </orderedlist>
+</sect1>
+
+</appendix>

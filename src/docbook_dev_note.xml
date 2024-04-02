@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE book
+[
+
+<!ENTITY cur_book_name      "docbook_dev_note" >
+<!ENTITY publish_date       "2015-05-12" >
+<!ENTITY release_version    "2.4.5" >
+
+<!ENTITY copyrith_year "2015" >
+<!ENTITY entity_common_multi_format SYSTEM  "../../entity_common_multi_format.xml">
+<!ENTITY entity_common_publish_info SYSTEM  "../../entity_common_publish_info.xml">
+]>
+
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+
+    xml:lang="zh_CN"
+    >
+<info>
+    <title>Docbook开发手记</title>
+    <subtitle></subtitle>
+    <keywordset>
+        <keyword>Docbook</keyword>
+        <keyword>Docbook5</keyword>
+        <keyword>中文</keyword>
+        <keyword>开发</keyword>
+        <keyword>搭建环境</keyword>
+    </keywordset>
+
+    <abstract>
+        <para>本文先简介了什么是Docbook,然后详细介绍了如何搭建中文的Docbook开发环境,再详细记录了Docbook开发过程中所遇到的各种注意事项和遇到的问题及解决办法,同时给出很多常见的Docbook中各种元素的示例代码,另外也记录了一些值得参考的Docbook相关的资料。</para>
+        <para>&entity_common_multi_format;</para>
+    </abstract>
+
+    <revhistory>
+        <revision>
+            <revnumber>&release_version;</revnumber>
+            <date>&publish_date;</date>
+            <revremark>
+                <orderedlist>
+                    <listitem>添加一个问题解答：listitem in namespace encountered in listitem</listitem>
+                    <listitem>添加一个qanda的示例代码</listitem>
+                    <listitem>添加示例：合并单元格的表格</listitem>
+                    <listitem>添加示例：chapter的xml域</listitem>
+                </orderedlist>
+            </revremark>
+            <authorinitials>crl</authorinitials>
+        </revision>
+        <revision>
+            <revnumber>2.4</revnumber>
+            <date>2013-10-09</date>
+            <revremark>
+                <orderedlist>
+                    <listitem>完善了代码示例部分</listitem>
+                    <listitem>更新整理了appendix附录部分，把最新的所有的book都整理进来了</listitem>
+                    <listitem>添加了filename，screenco等示例代码</listitem>
+                    <listitem>更新了所有的xml:id</listitem>
+                    <listitem>添加示例代码：figure内包含2张mediaobject图片</listitem>
+                    <listitem>添加示例代码：内嵌元素中的keycap</listitem>
+                    <listitem>修正了个别的笔误，修改了部分细节内容，添加了引用reference</listitem>
+                    <listitem>添加整理了：Docbook相关的资源和工具下载</listitem>
+                    <listitem>添加了：Docbook相关的知识和概念</listitem>
+                    <listitem>添加示例：programlisting和screen</listitem>
+                    <listitem>添加示例：filename是后缀名</listitem>
+                </orderedlist>
+            </revremark>
+            <authorinitials>crl</authorinitials>
+        </revision>
+        <revision>
+            <revnumber>1.1</revnumber>
+            <date>2012-06-14</date>
+            <revremark>
+                <orderedlist>
+                    <listitem>完成此文的框架</listitem>
+                    <listitem>各个章节都已添加了一些基本的内容，关于参考资料的部分，已添加大部分内容</listitem>
+                    <listitem>收集了一些常见问题及解决办法</listitem>
+                    <listitem>分割成多个文件</listitem>
+                    <listitem>添加了关于实体定义部分的介绍</listitem>
+                    <listitem>添加了调试fo部分的内容</listitem>
+                    <listitem>添加了如何搭建docbook环境</listitem>
+                    <listitem>添加了什么是Docbook</listitem>
+                    <listitem>添加了代码示例部分</listitem>
+                </orderedlist>
+            </revremark>
+            <authorinitials>crl</authorinitials>
+        </revision>
+    </revhistory>
+
+    &entity_common_publish_info;
+</info>
+
+<xi:include href="preface.xml" />
+<xi:include href="ch01_build_env.xml" />
+<xi:include href="ch02_notes.xml" />
+<xi:include href="ch03_faq.xml" />
+<xi:include href="ch04_materials.xml" />
+<xi:include href="ch05_issues.xml" />
+<xi:include href="ch06_examples.xml" />
+<xi:include href="ch07_concept_knowledge.xml" />
+<xi:include href="appendix.xml" />
+<xi:include href="reference.xml" />
+
+</book>

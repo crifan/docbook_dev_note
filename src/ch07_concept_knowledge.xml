@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch07_concept_knowledge"
+    >
+<title>Docbook相关的知识和概念</title>
+<abstract></abstract>
+
+<sect1 xml:id="html_and_print_out"><title>输出类型：html和打印输出print out</title>
+    <para>在将docbook的xml源码，转换输出为其他格式的时候，最常见的两大类是：HTML和fo</para>
+    <para>然后基于html，有多种对应的可选的输出类型，比如单个html，多个html，htmlhelp（即chm），webhelp等等。</para>
+    <para>而基于fo，则可以再转换为其他的格式，比如pdf，ps等等。</para>
+    <para>此处，在docbook中，html和fo，则分别对应着：html和print out打印输出，算是两种不同的输出类型。</para>
+    <para></para>
+</sect1>
+
+<sect1 xml:id="conditional_compile"><title>docbook中的条件编译：profiling</title>
+    <para>Docbook中有个类似于一般编程中的条件编译的东西，叫做：</para>
+    <para><link xl:href="http://www.sagehill.net/docbookxsl/Profiling.html">Profiling</link></para>
+    <para>即，你在xml源码中，加上一些参数，然后在输出生成HTML或FO的时候，会根据你所设置的条件，去执行相应的动作。</para>
+    <para>比如：</para>
+    <example xml:id="eg.role_conditional_compile"><title>添加role参数实现条件编译</title>
+        <programlisting language="xml">
+<![CDATA[
+<figure id="fg.nand_read_op_flow_2"><title>Nand Flash数据读取操作的时序图</title>
+    <mediaobject>
+        <imageobject role="html">
+            <imagedata fileref="images/nand_read_op_flow.png" align="center" scalefit="0" width="100%" />
+        </imageobject>
+        <imageobject role="fo">
+            <imagedata fileref="images/nand_read_op_flow.png" align="center" scalefit="1" width="100%"/>
+        </imageobject>
+    </mediaobject>
+</figure>
+]]>
+        </programlisting>
+        <para>然后编译的时候，就会根据你所输出的是HTML，就调用上面的那个fileref中scalefit="0"的配置，而生成FO的时候，fileref的配置中的，就使用scalefit="1"了。</para>
+    </example>
+    <para></para>
+</sect1>
+
+<sect1 xml:id="docbook_images_related"><title>关于docbook中的图片方面的内容</title>
+    <para>一般常见模式是，在xml源码同路径下，存在一个images文件夹，然后把自己文章相关的图片放进去。</para>
+    <para>此类图片的地址，在xml中都是很简单的images/xxx.jpg之类的。</para>
+    <para>另一些图片，就是和docbook系统相关的了，其随着docbook的xsl文件一同发布的，在<filename class="directory">docbook-xsl-ns-1.76.1\images</filename>中可以找到。</para>
+    <para>共分好几类，包括：</para>
+    <orderedlist>
+        <listitem>callout
+            <para>1,2，。。。，30</para>
+        </listitem>
+        <listitem>admon
+            <para>caution，important，note，tip，warning</para>
+        </listitem>
+        <listitem>navi
+            <para>home，prev，next，up</para>
+        </listitem>
+    </orderedlist>
+    <para>基本上，每种类型，都有对应的矢量的svg图片，和普通的bitmap类型的gif/jpg/png图片。</para>
+    <para></para>
+</sect1>
+
+<sect1 xml:id="docbook_variant"><title>docbook的一些变体</title>
+    <sect2 xml:id="simplified_docbook"><title>简化版的docbook</title>
+        <para>首先我们要知道的是，对于docbook本身，这个规范</para>
+        <para>其包含了很多元素，比如book，title，para，sect1，sect2，等等等等，</para>
+        <para>参考：<link xl:href="http://xml.web.cern.ch/XML/goossens/dbatcern/dbatcern.html">Writing Documentation Using DocBook</link></para>
+        <para>一共有超过400个元素（还不包括元素的各种属性）</para>
+        <para>而后来，由于大家在实际使用中，发现貌似完整版的docbook，有点太复杂了。</para>
+        <para>而很多时候，比如只将docbook用于写个article，技术手册(white paper)等等情况时，只需要用到其中部分的元素，就够用了。</para>
+        <para>所以，后来就又弄出一个docbook的简化版：<emphasis>Simplified DocBook</emphasis></para>
+        <para>简化版的docbook，只包含了大约119个元素（还有其他相关的555多个实体，29个符号）</para>
+        <para>很明显，相对于400多个元素的，完整版的docbook，还是要简化不少。</para>
+        <para>注意，此处的简化版的docbook，并非官网标准，而是所谓的community project，即由docbook社区发起的，逐渐丰富和制定出的一个标准。</para>
+        <para>简化版的docbook的主页：</para>
+        <para><link xl:href="http://docbook.org/schemas/sdocbook/">Simplified DocBook DTD</link></para>
+        <para>相关页面：</para>
+        <para><link xl:href="http://www.oasis-open.org/docbook/xml/simple/4.1.2.5/">Simplified DocBook Home</link></para>
+        <para><link xl:href="http://docbook.org/schemas/5x-custom#simple">Simplified DocBook</link></para>
+    </sect2>
+
+    <sect2 xml:id="docbook_slides"><title>docbook(制作)幻灯片</title>
+        <para>类似于上面的简化版的docbook，这个docbook slides，也是个社区标准，而非官方标准。</para>
+        <para>其中，最新版本的docbook-xsl-ns中，可以找到对应的样式表stylesheet，比如：<filename class="directory">docbook-xsl-ns-1.78.1/slides</filename></para>
+        <para>相关页面：</para>
+        <para><link xl:href="http://docbook.org/schemas/5x-custom.html#slides">DocBook “Slides”</link></para>
+    </sect2>
+
+    <sect2 xml:id="docbook_website"><title>docbook(制作)网站</title>
+        <para>类似于上面的简化版的docbook，这个docbook websites，也是个社区标准，而非官方标准。</para>
+        <para>其中，最新版本的docbook-xsl-ns中，可以找到对应的样式表stylesheet，比如：<filename class="directory">docbook-xsl-ns-1.78.1/website</filename></para>
+        <para>相关页面：</para>
+        <para><link xl:href="http://docbook.org/schemas/5x-custom.html#website">DocBook “Website”</link></para>
+    </sect2>
+
+</sect1>
+
+</chapter>

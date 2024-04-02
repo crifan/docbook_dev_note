@@ -1,0 +1,992 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter    xml:id="ch06_examples"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+    xmlns:ns4="http://www.w3.org/1999/xhtml"
+    xmlns:ns3="http://www.w3.org/2000/svg"
+    xmlns:ns="http://docbook.org/ns/docbook">
+<title>Docbook各种元素用法举例</title>
+<abstract>
+    <para>记录Docbook中，各种元素(element)的当前最新版本的示例用法</para>
+    <para>以下代码示例中，暂定均不含注解（callout），以方便借鉴者，直接拷贝代码，就可以参考使用。</para>
+    <para>此处，尽量添加实际的例子，以便快速掌握用法。</para>
+    <para>其中，贴出来的xml源码，部分可能被删减，以防内容太长或者是和此处CDATA等内容冲突。</para>
+</abstract>
+
+    <sect1 xml:id="example_chapter_section"><title>chapter, section, sect1-sect5</title>
+        <example xml:id="eg.chapter_sect1_sect5"><title>chapter,section,sect1-sect5</title>
+            <para></para>
+            <programlisting language="xml">
+<![CDATA[
+
+<chapter
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+
+	xml:id="crosscompiler_intro">
+<title>交叉编译器简介</title>
+<abstract></abstract>
+
+<para></para>
+<para>相关旧帖：<link xl:href="http://www.crifan.com/embedded_development_cross_compiler_and_toolchain/">嵌入式开发之交叉编译器</link></para>
+<para></para>
+<para></para>
+<sect1 xml:id="crosscompiler_naming_rule"><title>交叉编译器的名字的命名规则</title>
+    <para>在折腾嵌入式开发，用到交叉编译器的时候，常常会看到这样的名字：</para>
+    <para>arm-xscale-linux-gnueabi-gcc</para>
+    <para>arm-liunx-gnu-gcc</para>
+    <para>等等</para>
+    <para>其中，对应的交叉编译器的前缀为：</para>
+    <para>arm-xscale-linux-gnueabi-</para>
+    <para>arm-liunx-gnu-</para>
+    <para>而关于这些名字，我之前也是没注意，或者说很模糊，不是很清楚这些名字是从何而来的。</para>
+    <para>后来，经过折腾了crosstool-ng后，基本上明白了这些名字，是如何生成的。</para>
+    <para>其中，貌似此交叉编译器命名的规则，应该是通用的，至少记得是Buildroot中，好像也是这样命名的。</para>
+    <para>下面，就以crosstool-ng为例，参考我之前折腾crosstool-ng期间：</para>
+    <para><link xl:href="http://www.crifan.com/crosstool_tuple_vendor_string_ct_target_vendor/">【整理】crosstool中如何设置xscale的Tuple’s vendor string(CT_TARGET_VENDOR)</link></para>
+    <para>所了解到的内容，来解释解释，这些名字的含义。</para>
+    
+    <sect2 xml:id="crosstool_ng_crosscompiler_naming_rule"><title>crosstool-ng中交叉编译前缀的命名规则</title>
+        <para>crosstool-ng中，交叉编译器的（前缀）的名字的命名规则是：</para>
+        <screen>arch-vendor-kernel-system</screen>
+        <para>对应分别是：</para>
+        
+        <sect3 xml:id="crosscompiler_system_part"><title>交叉编译器名字中的system部分</title>
+            <para>system，直译为，系统</para>
+            <para>其实主要表示的，交叉编译器所选择的库函数和目标系统</para>
+            <para>最常见的一些值有，gnu，gnueabi，uclibcgnueabi等等。</para>
+            <para>其中，此处有几方面的值，表示了几方面的含义：</para>
+
+            <sect4 xml:id="system_uclibc"><title>system中的uclibc</title>
+                <para>uclibc，是c库中的一种</para>
+                <para>crosstool-ng中，目前支持三种：glibc,eglibc,uclibc</para>
+                <para>关于三种的关系，详见：</para>
+                <para><link xl:href="http://www.crifan.com/relation_between_uclibc_glibc_eglibc/">【整理】uclibc,eglibc,glibc之间的区别和联系</link></para>
+                <para></para>
+                <sect5 xml:id="system_uclibc_in_crosstool_ng"><title>crosstool-ng中system为uclibc的情况</title>
+                    <para>crosstool-ng中，和system中uclibc对应的值，应该就是"C-library"中的"C library"的值设置为"uClibc"了。</para>
+                    <screen>
+C-library
+  C library (uClibc)  --->
+                    </screen>
+                    <para>对应的配置参数是：CT_LIBC_uClibc</para>
+                    <para>对应的help的解释是：</para>
+                </sect5>
+            </sect4>
+            <para></para>
+        </sect3>
+    </sect2>
+    <para></para>
+</sect1>
+
+</chapter>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="example_para"><title>段落</title>
+        <example xml:id="eg.para"><title>普通的段落:para</title>
+            <programlisting language="xml">
+<![CDATA[
+<para>在折腾嵌入式开发，用到交叉编译器的时候，常常会看到这样的名字：</para>
+<para><link xl:href="http://www.crifan.com/crosstool_tuple_vendor_string_ct_target_vendor/">【整理】crosstool中如何设置xscale的Tuple’s vendor string(CT_TARGET_VENDOR)</link></para>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.formalpara"><title>带标题的正式的段落:formalpara</title>
+            <programlisting language="xml">
+<![CDATA[
+<formalpara><title>段落的标题</title>
+    <para>段落的内容</para>
+</formalpara>
+]]>
+            </programlisting>
+        </example>
+    </sect1>
+
+    <sect1 xml:id="example_figure"><title>图片figure</title>
+        <example xml:id="eg.figure_formal"><title>带标题的图片:figure</title>
+            <programlisting language="xml">
+<![CDATA[
+<figure xml:id="fg.figure_id"><title>图片的标题</title>
+    <mediaobject>
+        <imageobject role="html"><imagedata fileref="images/figure_id.png" align="left"   scalefit="0" width="100%" /></imageobject>
+        <imageobject role="fo">  <imagedata fileref="images/figure_id.png" align="center" scalefit="1" width="100%"/></imageobject>
+    </mediaobject>
+</figure>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.figure_two_mediaobject"><title>figure内包含2张mediaobject图片</title>
+            <programlisting language="xml">
+<![CDATA[
+    <figure id="fg.hid_use_page"><title>HID Usage page summary</title>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/hid_use_page.gif" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/hid_use_page.gif" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+        <mediaobject>
+            <imageobject role="html">
+                <imagedata fileref="images/hid_use_page_2.gif" align="left" scalefit="0" width="100%" />
+            </imageobject>
+            <imageobject role="fo">
+                <imagedata fileref="images/hid_use_page_2.gif" align="center" scalefit="1" width="100%"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.figure_informalfigure"><title>不带标题的非正式的图片:informalfigure</title>
+            <programlisting language="xml">
+<![CDATA[
+    <informalfigure>
+        <mediaobject>
+            <imageobject role="html"><imagedata fileref="images/no_hl_fo_source.jpg" scalefit="0" width="100%" /></imageobject>
+            <imageobject role="fo">  <imagedata fileref="images/no_hl_fo_source.jpg" scalefit="1" width="100%" /></imageobject>
+        </mediaobject>
+    </informalfigure>
+]]>
+            </programlisting>
+        </example>
+        <para>在同一行内显示图片，之前docbook 4使用inlinegraphic</para>
+        <para>而根据<link xl:href="http://www.sagehill.net/docbookxsl/InlineGraphics.html">Inline graphics</link>，而现在docbook 5已废弃使用inlinegraphic ，改用inlinemediaobject。</para>
+        <example xml:id="eg.figure_inlinemediaobject"><title>行内图片:inlinemediaobject</title>
+            <programlisting language="xml">
+<![CDATA[
+<para>右击cmd的左上角的图标
+    <inlinemediaobject>
+        <imageobject><imagedata fileref="images/windows/cmd/cmd_icon.png"/></imageobject>
+        <textobject><phrase>cmd的图标</phrase></textobject>
+    </inlinemediaobject>
+    ，会出现对应的菜单：
+</para>
+]]>
+            </programlisting>
+        </example>
+    </sect1>
+
+    <sect1 xml:id="example_table"><title>表格，表格嵌套，表格单元格合并</title>
+        <example xml:id="eg.table"><title>表格:table</title>
+            <programlisting language="xml">
+<![CDATA[
+<table xml:id="tbl.usb_class"><title>USB Class表</title>
+    <tgroup cols="3">
+        <colspec colnum="1" colname="col1" colwidth="1*" />
+        <colspec colnum="2" colname="col2" colwidth="1*" />
+        <colspec colnum="3" colname="col3" colwidth="4*" />
+        
+        <thead>
+            <row><entry>Base Class</entry><entry>Descriptor Usage</entry><entry>Description</entry></row>
+        </thead>
+        
+        <tbody>
+            <row><entry>00h</entry><entry>Device </entry><entry>Use class information in the Interface Descriptors</entry></row>
+            <row><entry>01h</entry><entry>Interface</entry><entry>Audio</entry></row>
+            <row><entry>02h</entry><entry>Both</entry><entry>Communications and CDC Control</entry></row>
+            <row><entry>03h</entry><entry>Interface</entry><entry>HID (Human Interface Device)</entry></row>
+            <row><entry>05h</entry><entry>Interface</entry><entry>Physical</entry></row>
+            <row><entry>06h</entry><entry>Interface</entry><entry>Image</entry></row>
+            <row><entry>07h</entry><entry>Interface</entry><entry>Printer</entry></row>
+            <row><entry>08h</entry><entry>Interface</entry><entry>Mass Storage</entry></row>
+            <row><entry>09h</entry><entry>Device</entry><entry>Hub</entry></row>
+            <row><entry>0Ah</entry><entry>Interface</entry><entry>CDC-Data</entry></row>
+            <row><entry>0Bh</entry><entry>Interface</entry><entry>Smart Card</entry></row>
+            <row><entry>0Dh</entry><entry>Interface</entry><entry>Content Security</entry></row>
+            <row><entry>0Eh</entry><entry>Interface</entry><entry>Video</entry></row>
+            <row><entry>0Fh</entry><entry>Interface</entry><entry>Personal Healthcare</entry></row>
+            <row><entry>DCh</entry><entry>Both</entry><entry>Diagnostic Device</entry></row>
+            <row><entry>E0h</entry><entry>Interface</entry><entry>Wireless Controller</entry></row>
+            <row><entry>EFh</entry><entry>Both</entry><entry>Miscellaneous</entry></row>
+            <row><entry>FEh</entry><entry>Interface</entry><entry>Application Specific</entry></row>
+            <row><entry>FFh</entry><entry>Both</entry><entry>Vendor Specific</entry></row>
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.table_embedded"><title>带嵌套（embedded）表格:informaltable</title>
+            <programlisting language="xml">
+<![CDATA[
+<table id="tbl.mpeg_xing_header_format" align="left"><title>XING 头的格式及含义</title>
+    <tgroup cols="4">
+        <colspec colnum="1" colname="col1" colwidth="2*"/>
+        <colspec colnum="2" colname="col2" colwidth="2*"/>
+        <colspec colnum="3" colname="col3" colwidth="8*"/>
+        <colspec colnum="4" colname="col4" colwidth="3*"/>
+        <thead>
+            <row><entry>位置（字节）</entry><entry>长度（字节）</entry><entry>含义</entry><entry>示例</entry></row>
+        </thead>
+        <tbody>
+            <row><entry>0</entry><entry>4</entry><entry>4个ASCII字符的VBR头 ID，要么是Xing，要么是Info，无NULL结尾（普通字符串都以NULL,即\0结尾）</entry><entry>'Xing'</entry></row>
+            <row><entry>4</entry><entry>4</entry>
+                <entry><para>存放一个标志，用于表示接下来存在哪些域/字段,各字段逻辑或的结果：
+                    <informaltable>
+                        <tgroup cols="2" >
+                            <colspec colnum="1" colwidth="1*" />
+                            <colspec colnum="2" colwidth="2*" />
+                            <tbody>
+                                <row><entry>0x0001</entry><entry>存在总帧数（Frames）字段</entry></row>
+                                <row><entry>0x0002</entry><entry>存在文件大小（Bytes）字段</entry></row>
+                                <row><entry>0x0004</entry><entry>存在TOC字段</entry></row>
+                                <row><entry>0x0008</entry><entry>存在音频质量指示字段</entry></row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable></para>
+                </entry>
+                <entry><para>0x0007 就表示下面存在：
+                    <simplelist type='vert' columns='1'>
+                        <member>总帧数</member>
+                        <member>文件大小总字节数</member>
+                        <member>TOC表</member>
+                    </simplelist></para>
+                </entry></row>
+            <row><entry>8</entry><entry>4</entry><entry><emphasis>总帧数(Frames)</emphasis>，大端[可选]</entry><entry>7344</entry></row>
+            <row><entry>8或12</entry><entry>4</entry><entry>文件总大小，单位字节，大端[可选]</entry><entry>45000</entry></row>
+            <row><entry>8，12，16</entry><entry>100</entry><entry>TOC表，大端[可选]</entry><entry> </entry></row>
+            <row><entry>8或12, 16, 108, 112 ，116</entry><entry>4</entry><entry>音频质量指示，最差0，最好100，大端[可选]</entry><entry>0</entry></row>
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.table_merged_cell"><title>待单元格合并的表格：namest，nameend，morerows</title>
+            <programlisting language="xml">
+<![CDATA[
+        <table xml:id="tbl.char_exchange_spec"><title>字符（存储）交换标准</title>
+            <tgroup cols="3">
+                <colspec colnum="1" colname="col1" colwidth="1*" />
+                <colspec colnum="2" colname="col2" colwidth="1*" />
+                <colspec colnum="3" colname="col3" colwidth="1*" />
+                
+                <thead align="center">
+                    <row><entry namest="col1" nameend="col2" >字符编码标准</entry><entry morerows="1" valign="middle">存储(交换/传输)标准</entry></row>
+                    <row><entry>包含字符</entry><entry>字符编码领域的叫法</entry></row>
+                </thead>
+                
+                <tbody>
+                    <row><entry>英文</entry>
+                        <entry>
+                            <simplelist type="vert" columns="1">
+                                <member>ASCII</member>
+                                <member>==ISO/IEC 646</member>
+                            </simplelist>
+                        </entry><entry>ASCII</entry></row>
+                    <row><entry>欧洲多国的字符</entry><entry>ISO 8859</entry><entry></entry></row>
+                    <row><entry morerows="2" valign="middle">通用(的任何)字符</entry><entry morerows="2" valign="middle">Unicode</entry><entry>UTF<co id="co.utf" linkends="co.note.utf"/>-8</entry></row>
+                    <row><entry colname="col3">UTF<coref linkend="co.utf"/>-16</entry></row>
+                    <row><entry colname="col3">UTF<coref linkend="co.utf"/>-32</entry></row>
+                    <row><entry morerows="2" valign="middle">简体中文<co id="co.zhcn" linkends="co.note.zhcn"/></entry>
+                        <entry>
+                            <simplelist type="vert" columns="1">
+                                <member>GB2312</member>
+                                <member>==GB2312-80</member>
+                                <member>==GB</member>
+                                <member>==GB0<co id="co.gb0" linkends="co.note.gb0"/></member>
+                            </simplelist>
+                        </entry><entry morerows="2" valign="middle">EUC<co id="co.euc" linkends="co.note.euc"/>-CN</entry></row>
+                    <row><entry colname="col2">GBK</entry></row>
+                    <row><entry colname="col2">GB18030</entry></row>
+                    <row><entry morerows="2" valign="middle">繁体中文</entry>
+                        <entry morerows="2" valign="middle">
+                            <simplelist type="vert" columns="1">
+                                <member>BIG5</member>
+                                <member>==大五码</member>
+                                <member>==五大码</member>
+                            </simplelist>
+                        </entry><entry>CCCII</entry></row>
+                    <row><entry colname="col3">CNS-11643</entry></row>
+                    <row><entry colname="col3">EUC<coref linkend="co.euc"/>-TW</entry></row>
+                    <row><entry morerows="3" valign="middle">日文</entry>
+                        <entry morerows="2" valign="middle">
+                            <simplelist type="vert" columns="1">
+                                <member>JIS X 0208</member>
+                                <member>== JIS C 6226和JIS X 0212</member>
+                            </simplelist>
+                        </entry><entry>Shift JIS</entry></row>
+                    <row><entry colname="col3">ISO-2022-JP</entry></row>
+                    <row><entry colname="col3">EUC<coref linkend="co.euc"/>-JP</entry></row>
+                    <row><entry colname="col2">JIS X 0213</entry><entry>EUC-JISX0213</entry></row>
+                    <row><entry>韩文</entry>
+                        <entry>
+                            <simplelist type="vert" columns="1">
+                                <member>KS X 1001</member>
+                                <member>== KS C 5601</member>
+                            </simplelist>
+                        </entry><entry>EUC<coref linkend="co.euc"/>-KR</entry></row>
+                </tbody>
+            </tgroup>
+        </table>
+]]>
+            </programlisting>
+		</example>
+    </sect1>
+
+    <sect1 xml:id="example_callout"><title>注释callout</title>
+        <example xml:id="eg.callout_programlisting"><title>programlisting的callout:programlistingco</title>
+            <programlisting language="xml">
+<![CDATA[
+<programlistingco>
+    <programlisting language="c">
+static struct platform_driver s3c2410_nand_driver = {
+	.probe<co id="co.probe" linkends="co.note.probe" />		= s3c2410_nand_probe,
+	.remove<co id="co.remove" linkends="co.note.remove" />		= s3c2410_nand_remove,
+	.suspend<co id="co.suspend" linkends="co.note.suspend" />	= s3c24xx_nand_suspend,
+	.resume<coref linkend="co.suspend" />		= s3c24xx_nand_resume,
+	.driver		= {
+		.name	= "s3c2410-nand",
+		.owner	= THIS_MODULE,
+	},
+};
+    </programlisting>
+    <calloutlist>
+        <callout id="co.note.probe" arearefs="co.probe" >
+            <para>probe就是系统“探测”，就是前面解释的整个过程，这个过程中的多数步骤，都是和你自己的Nand Flash相关的，尤其是那些硬件初始化部分，是你必须要自己实现的。</para>
+        </callout>
+        <callout id="co.note.remove" arearefs="co.remove" >
+            <para>remove，就是和probe对应的，“反初始化”相关的动作。主要是释放系统相关资源和关闭硬件的时钟等常见操作了。</para>
+        </callout>
+        <callout id="co.note.suspend" arearefs="co.suspend" >
+            <para>suspend和resume，对于很多没用到电源管理的情况下，至少对于我们刚开始写基本的驱动的时候，可以不用关心，放个空函数即可。</para>
+        </callout>
+    </calloutlist>
+</programlistingco>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <para>对应的screenco，就是把programlistingco和programlisting换为screenco和screen即可。</para>
+        <para>screenco举例如下：</para>
+        <example xml:id="eg.callout_screen"><title>screen的callout:screenco</title>
+            <programlisting language="xml">
+<![CDATA[
+    <screenco>
+        <screen>
+crosstool-ng-1.18.0<co id="co.ctng_src_folder" linkends="co.note.ctng_src_folder" />
+crosstool-ng-1.18.0_build<co id="co.ctng_build_folder" linkends="co.note.ctng_build_folder" />
+src<co id="co.download_src_folder" linkends="co.note.download_src_folder" />
+x-tools<co id="co.x_tools_folder" linkends="co.note.x_tools_folder" />
+crosstool-ng-1.18.0.tar.bz2<co id="co.ctng_tar_file" linkends="co.note.ctng_tar_file" />
+        </screen>
+        <calloutlist>
+            <callout id="co.note.ctng_src_folder" arearefs="co.ctng_src_folder" >
+                <para>crosstool-ng的源码包：<xref linkend="co.ctng_tar_file" />，解压后的文件夹</para>
+                <para>包含了crosstool-ng的相关源码</para>
+            </callout>
+            <callout id="co.note.ctng_build_folder" arearefs="co.ctng_build_folder" >
+                <para>专门为后期使用crosstool-ng去建立交叉编译器，的编译（build），而专门建立的文件夹</para>
+                <para>对应的，后续的<command>ct-ng menuconfig</command>，<command>ct-ng build</command>等命令，都是在此文件夹下执行的。</para>
+                <para></para>
+            </callout>
+            <callout id="co.note.download_src_folder" arearefs="co.download_src_folder" >
+                <para>为crosstool-ng中，后续需要下载各种软件的源码包，而准备的，</para>
+                <para>crosstool-ng中，在开始执行build之后，会去下载对应的源码包，都会存放到这个文件夹下</para>
+                <para></para>
+            </callout>
+            <callout id="co.note.x_tools_folder" arearefs="co.x_tools_folder" >
+                <para>这个文件夹，是，用crosstool-ng所生成的交叉编译器，所在的路径。</para>
+                <para>对应的配置中，会有，类似于：</para>
+                <screen>(${HOME}/develop/crosstool-ng/x-tools/${CT_TARGET}) Prefix directory</screen>
+                <para>的配置，用来指定生成的交叉编译器，存放在何处。</para>
+                <para>此时，就是去设置为此处对应的路径即可。</para>
+            </callout>
+            <callout id="co.note.ctng_tar_file" arearefs="co.ctng_tar_file" >
+                <para>很明显，这个就是之前我在折腾crosstool-ng-1.18.0时，去下载的源码包了。</para>
+                <para>对应的上面的<xref linkend="co.ctng_src_folder" />，就是此源码包解压后的路径。</para>
+                <para></para>
+            </callout>
+        </calloutlist>
+    </screenco>
+]]>
+            </programlisting>
+        </example>
+        <para>对应的table中添加callout，就是在table的任意位置使用co，然后再table之外使用calloutlist+callout即可。</para>
+        <para>下面这个例子，是自己摸索出来的，通过在任意位置使用co，然后别处直接可以使用coref引用该co，且不一定需要对应的callout和calloutlist：</para>
+        <example xml:id="eg.co_coref_without_callout"><title>没有callout的co实现在任意位置使用co然后在别处使用coref去引用</title>
+            <programlisting language="xml">
+<![CDATA[
+<orderedlist>
+    <listitem><emphasis>Evacuation</emphasis><co id="co.evacuation" linkends="co.note.evacuation" /> procedures are implemented whenever the fire alarms have been activated.</listitem>
+    <listitem>The following rules and policies are binding for every employee who works at the <emphasis>premises</emphasis><co id="co.premises" linkends="co.note.premises" /> of M&amp;M Software (Suzhou) GmbH</listitem>
+</orderedlist>
+
+<table xml:id="tbl.eng_words_1_20"><title>1-20单词的含义</title>
+    <tgroup cols="4">
+        <colspec colnum="1" colname="col1" colwidth="1*" />
+        <colspec colnum="2" colname="col2" colwidth="2*" />
+        <colspec colnum="3" colname="col3" colwidth="2*" />
+        <colspec colnum="4" colname="col4" colwidth="4*" />
+    
+        <thead align="center">
+            <row><entry>序号</entry><entry>英文单词</entry><entry>中文含义</entry><entry>说明注释</entry></row>
+        </thead>
+        
+        <tbody>
+            <row><entry><coref linkend="co.evacuation" id="co.note.evacuation" /></entry><entry>evacuation</entry><entry>疏散，撤离</entry><entry>指失火了，要逃离的情况</entry></row>
+            <row><entry><coref linkend="co.premises" id="co.note.premises" /></entry><entry>premises</entry><entry>经营场所</entry><entry>此处是公司地址，场所的意思</entry></row>
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+        </example>
+        <para>不过目前此种用法，有个小bug，那就是生成的HTML中鼠标虽可点击，但是无法跳转，不过生成的PDF中是正常的支持鼠标点击co和coref互相跳转的。</para>
+    </sect1>
+
+    <sect1 xml:id="example_link_xref"><title>链接，引用</title>
+        <para>链接，使用link代替旧的ulink：</para>
+        <para>注意，是在顶层的chapter，sect1等中，定义对应xlink的域名的</para>
+        <example xml:id="eg.link_xlink_ns"><title>带xlink域名的link</title>
+            <programlisting language="xml">
+<![CDATA[
+<sect1
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="lan.python">
+<title>Python</title>
+......
+    <sect2 xml:id="lan.python.crifanlib"><title>crifan的Python库：crifanLib.py</title>
+        <para>之前在折腾<link xl:href="http://www.crifan.com/crifan_released_all/website/python/blogstowordpress/">BlogsToWordPress：将百度空间，网易163，新浪sina，QQ空间，人人网，CSDN，搜狐Sohu等博客搬家到WordPress </link>的过程中，先后遇到很多个问题，然后基本上也都自己解决了。对应的也写了相应的代码和函数。</para>
+        ......
+    </sect2>
+</sect1>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <para>引用，很简单，就是用xref而已：</para>
+        <example xml:id="eg.xref"><title>xref引用</title>
+            <programlisting language="xml">
+<![CDATA[
+<tip>
+    <para>上述gif动画演示，只支持HTML在浏览器中的显示。其他格式输出中，比如PDF中，不支持此gif动画。所以下面再用文字解释一下大概流程：<xref linkend="text_explain_run_py_in_cmd" /></para>...
+</tip>
+<para>用文字简述就是：</para>
+<formalpara xml:id="text_explain_run_py_in_cmd"><title>用文字解释如何在Windows的cmd中运行Python脚本BlogsToWordpress.py</title>
+    <orderedlist>
+        ......
+    </orderedlist>
+</formalpara>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="example_equation"><title>等式</title>
+        <para></para>
+        <example xml:id="eg.equation"><title>等式equation</title>
+            <programlisting language="xml">
+<![CDATA[
+<equation xml:id="eq.cbr_duration"><title>CBR播放时间（CBR Duration）</title>
+    <mathphrase>
+        <para>CBR Duration</para>
+        <para>= File Size(Byte) × 8 bit/Byte ÷ （Bitrate（K bit/s）× 1000 bit/Kbit ）</para>
+        <para>CBR播放时间</para>
+        <para>= 文件大小（字节）× 8比特/字节 ÷（比特率 千比特/秒 ×1000 比特/千比特）</para>
+    </mathphrase>
+</equation>
+]]>
+            </programlisting>
+        </example>
+    </sect1>
+    
+    <sect1 xml:id="example_list"><title>list列表系列</title>
+        <example xml:id="eg.itemizedlist"><title>itemizedlist</title>
+            <programlisting language="xml">
+<![CDATA[
+<itemizedlist>
+    <listitem>
+        <para>xx</para>
+        <para>xx</para>
+        <para>xx</para>
+    </listitem>
+    <listitem>
+        <para>yy</para>
+        <para>yy</para>
+        <para>yy</para>
+    </listitem>
+</itemizedlist>
+
+<itemizedlist>
+    <listitem>xxxxxx
+        <para>xxx</para>
+        <para>xxx</para>
+        <para>xxx</para>
+    </listitem>
+    <listitem>xxxxxx
+        <para>yyy</para>
+        <para>yyy</para>
+        <para>yyy</para>
+    </listitem>
+</itemizedlist>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.itemizedlist_emphasis"><title>带emphasis的itemizedlist</title>
+            <programlisting language="xml">
+<![CDATA[
+<itemizedlist>
+    <listitem><emphasis>xxx</emphasis>
+        <para>xx</para>
+        <para>xx</para>
+        <para>xx</para>
+    </listitem>
+    <listitem><emphasis>yyy</emphasis>
+        <para>yy</para>
+        <para>yy</para>
+        <para>yy</para>
+    </listitem>
+</itemizedlist>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.orderedlist_para"><title>带指定编号类型的orderedlist</title>
+            <programlisting language="xml">
+<![CDATA[
+<orderedlist numeration="arabic">
+    <listitem>总的帧数：<para>VBR中的总的帧的数目。</para></listitem>
+    <listitem>帧的采样个数：<para>对于MP3（MPEG1，Layer III）来说，是固定的1152个采样。</para></listitem>
+    <listitem>帧的采样率：<para>通过解析第一帧，即可得知帧采样率索引，查表，即可得此采样率。</para></listitem>
+</orderedlist>
+]]>
+            </programlisting>
+        </example>
+    </sect1>
+
+    <sect1 xml:id="example_simplelist_literallayout"><title>简单列表simplelist，literallayout</title>
+        <para></para>
+        <example xml:id="eg.simplelist"><title>简单列表simplelist</title>
+            <programlisting language="xml">
+<![CDATA[
+<table id="mp3_content_struct">
+    <title>MP3文件的内容组织结构</title>
+    <tgroup cols="1">
+        <colspec colnum="1" colname="col1" colwidth="1*"/>
+        <tbody>
+            <row><entry><para>第二帧，格式如下：
+                <simplelist type='horiz' columns='2'>
+                    <member>[ID3......]</member><member>ID3 V2的头，大多数最新的MP3，都有这个头</member>
+                    <member>[APE 头]</member><member>用于APE格式的头，现在也用于MPEG</member>
+                </simplelist></para></entry></row>
+            ......
+            <row><entry>[TAG ......] 128字节的ID3 V1信息，如果没有前面的ID3 V2，多数都有这个ID3 V1的头</entry></row>
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.literallayout"><title>简单列举literallayout</title>
+            <programlisting language="xml">
+<![CDATA[
+<table id="tbl.nand_third_id"><title>Nand Flash第3个ID的含义</title>
+    <tgroup cols="7">
+        <colspec colnum="1" colname="col1" colwidth="3*"/>
+        ......
+        <thead>
+            <row><entry></entry><entry>Description</entry><entry>I/O7</entry><entry>I/O6</entry><entry>I/O5 I/O4</entry><entry>I/O3 I/O2</entry><entry>I/O1 I/O0</entry></row>
+        </thead>
+        <tbody>
+            <row><entry>Internal Chip Number</entry><entry><emphasis><literallayout>1
+2
+4
+8
+</literallayout></emphasis></entry><entry></entry><entry></entry><entry></entry><entry></entry><entry><literallayout>0      0
+0      1
+1      0
+1      1
+</literallayout></entry></row>
+            ......
+        </tbody>
+    </tgroup>
+</table>
+]]>
+            </programlisting>
+        </example>
+    </sect1>
+
+    <sect1 xml:id="example_xinclude"><title>xinclude文件，xinclude文件中的其中一部分的内容</title>
+        <para>在主文件docbook_dev_note.xml中：</para>
+        <example xml:id="eg.xinclude_main_file"><title>xinclude主文件中使用xinclude</title>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+......
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+
+    xml:lang="zh_CN"
+    >
+<info>
+    <title>Docbook开发手记</title>
+    <subtitle></subtitle>
+......
+</info>
+
+<xi:include href="preface.xml" />
+<xi:include href="ch01_build_env.xml" />
+......
+</book>
+]]>
+            </programlisting>
+        </example>
+        <para>然后被包含的文件中，是正常的xml文件。</para>
+        <para>比如preface.xml：</para>
+        <example xml:id="eg.xinclude_subfile_preface"><title>被xinclude包含的子文件：preface.xml</title>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE preface>
+
+<preface 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="preface">
+<title>Docbook介绍</title>
+<sect1 xml:id="what_is_docbook"><title>什么是Docbook</title>
+......
+</sect1>
+</preface>
+]]>
+            </programlisting>
+        </example>
+        <para>比如ch01_build_env.xml：</para>
+        <example xml:id="eg.xinclude_subfile_ch01"><title>被xinclude包含的子文件：ch01_build_env.xml</title>
+            <programlisting language="xml">
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+......
+]>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch01_build_env">
+
+<title>Windows下的Docbook的环境搭建</title>
+<abstract></abstract>
+    <sect1><title>搭建Docbook之前需要知道的最基本的事情</title>
+......
+    </sect1>
+</chapter>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="example_filename"><title>filename：文件，文件夹，后缀名，</title>
+        <para>当去表示一个普通文件，文件夹，符号链接，分区，库文件，头文件，设备文件等等内容时，可以用<emphasis>filename</emphasis>这个关键字。</para>
+        <para>关于<emphasis>filename</emphasis>的详细语法，可参考：<link xl:href="http://www.docbook.org/tdg/en/html/filename.html">docbook elelment: filename</link></para>
+        <example xml:id="eg.filename_file_directory"><title>filename是文件，文件夹的例子</title>
+            <programlisting language="xml">
+<![CDATA[
+    <para>此处，只是去修改对应的<filename>.build/src/linux-custom/scripts/unifdef.c</filename>，即可。</para>
+
+    <para>比如：我之前，除了，解压crosstool所得的文件夹<filename class="directory">crosstool-ng-1.18.0</filename>之外，去建立了一个对应的文件夹：<filename class="directory">crosstool-ng-1.18.0_build</filename></para>
+    <para>同时，为了后续crosstool-ng下载对应的各个包，也建立了对应的<filename class="directory">src</filename>和<filename class="directory">x-tools</filename>两个文件夹。</para>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+        <example xml:id="eg.filename_extension"><title>示例：filename是后缀名</title>
+            <programlisting language="xml">
+<![CDATA[
+    <para>提示：其中可以看到<link xl:href="http://www.crifan.com/files/doc/docbook/rec_soft_npp/release/html/rec_soft_npp.html">Notepad++</link>自动帮你写好了<filename class="extension">.py</filename>后缀，那是因为你之前设置了Python语法高亮。</para>
+]]>
+            </programlisting>
+        </example>
+        <para></para>
+    </sect1>
+
+    <sect1 xml:id="example_admonitions"><title>admonitions：note，caution，warning，tip和important</title>
+        <para>Docbook中有个一系列的术语叫做admonitions，包含了note，caution，warning，tip和important</para>
+        <sect2 xml:id="example_admonitions_note"><title>note</title>
+            <para></para>
+            <example xml:id="eg.note"><title>note举例</title>
+                <programlisting language="xml">
+<![CDATA[
+<note xml:id="note.install_java_first"><title>如果没有安装java，请先安装java</title>
+    <para>fop的运行，依赖于java运行环境。</para>
+    <para>如果你的windows中，还没有安装java，请先安装java运行环境（JRE=java runtime environment）。</para>
+    <para>关于java的基本知识和如何安装，不了解的请参考：<link xl:href="http://www.crifan.com/files/doc/docbook/soft_dev_basic/release/html/soft_dev_basic.html#java">Java</link></para>
+    <para>java已经安装好前提下，另外记得确保JAVA_HOME环境变量已经正确设置好了。</para>
+    <para>比如，我的系统中的是：</para>
+    <screen>JAVA_HOME=D:\Program Files\Java\jre7</screen>
+</note>
+]]>
+                </programlisting>
+            </example>
+            <para></para>
+        </sect2>
+        
+        <sect2 xml:id="example_admonitions_caution"><title>caution</title>
+            <para></para>
+            <example xml:id="eg.caution"><title>caution举例</title>
+                <programlisting language="xml">
+<![CDATA[
+<caution xml:id="not_make_ldflags_lintl_lcurses"><title>此处不要通过make时加LDFLAGS参数去添加-lintl和-lcurses</title>
+    <para>其实，上面贴出来的，修改makefile的办法，的确已经解决了此处的，缺少intl和缺少ncurses的库的两个问题了。</para>
+    <para>只是，后来，在另外一个Cygwin环境下去折腾同样的make编译crosstool-ng的时候：</para>
+    <para><link xl:href="http://www.crifan.com/cygwin_crosstool_ng_configure_make_make_install">【记录】Cygwin下配置编译和安装crosstool-ng</link></para>
+    <para>由于之前解决上面这个问题的时候：</para>
+    <para><link xl:href="http://www.crifan.com/crosstool_ng_cygwin_zconf_tab_o_zconf_tab_c_text_0x162a_undefined_reference_to_libintl_gettext-2/">【已解决】Cygwin 1.7.17下make编译crosstool-ng出错：zconf.tab.o:zconf.tab.c:(.text+0x162a): undefined reference to `_libintl_gettext'</link></para>
+    <para>用的解决办法是：</para>
+    <para>不去修改makefile，而直接给make加上LDFLAGS参数加上-lintl：</para>
+    <screen>make LDFLAGS="-lintl"</screen>
+    <para>当时也是可以解决此问题的。</para>
+</caution>
+]]>
+                </programlisting>
+            </example>
+            <para></para>
+        </sect2>
+        
+        <sect2 xml:id="example_admonitions_warning"><title>warning</title>
+            <para></para>
+            <para></para>
+            <para></para>
+        </sect2>
+        
+        <sect2 xml:id="example_admonitions_tip"><title>tip</title>
+            <para></para>
+            <example xml:id="eg.tip"><title>tip举例</title>
+                <programlisting language="xml">
+<![CDATA[
+<tip xml:id="tip.how_set_win_env"><title>如何设置windows环境变量</title>
+    <para>关于如何添加相应路径到windows的环境变量中，不熟悉的可以参考：</para>
+    <para><link xl:href="http://www.crifan.com/files/doc/docbook/soft_dev_basic/release/html/soft_dev_basic.html#win_env_var">Windows的环境变量</link></para>
+</tip>
+]]>
+                </programlisting>
+            </example>
+            <para></para>
+        </sect2>
+        
+        <sect2 xml:id="example_admonitions_important"><title>important</title>
+            <para></para>
+            <para></para>
+            <para></para>
+        </sect2>
+    </sect1>
+
+    <sect1 xml:id="example_inline_elements"><title>一些inline元素：keycap，guibutton，keycombo</title>
+        <para>参考：<link xl:href="http://www.badgers-in-foil.co.uk/projects/docbook-css/tests/inlines-gen.xml">Inline Docbook Elements</link></para>
+        <para>而看到，Docbook中有个一系列的术语叫做内嵌元素(inline elements)，比如，keycap，guibutton，keycombo</para>
+        <para>这些元素，可以通过css配置而达到3D显示的效果：</para>
+        <sect2 xml:id="example_keycap"><title>keycap</title>
+            <para></para>
+            <example xml:id="eg.keycap"><title>keycap举例</title>
+                <programlisting language="xml">
+<![CDATA[
+<para>按<keycap>PrtScn</keycap>键可以截屏。</para>
+]]>
+                </programlisting>
+            </example>
+            <para>此处，就用上面的代码，加上合适的css去配置，在浏览器中打开编译输出的网页，就能看到下面的这个PrtScn可以显示出3D的效果：</para>
+            <para>按<keycap>PrtScn</keycap>键可以截屏。</para>
+        </sect2>
+
+    </sect1>
+
+    <sect1 xml:id="example_programinglist_screen"><title>programlisting代码和screen屏幕输出</title>
+        <para>docbook中用于代码和屏幕输出等内容，对应的是<emphasis>programlisting</emphasis>和<emphasis>screen</emphasis></para>
+        <para></para>
+        <tip xml:id="tp.xml_cdata"><title>XML中的实体和CDATA</title>
+            <para>对于docbook中写<emphasis>programlisting</emphasis>和<emphasis>screen</emphasis>等方面的东西</para>
+            <para>会涉及到CDATA方面的事情，其和XML的中的实体有关。</para>
+            <para>对于XML的实体不了解的，可以去参考：<link xl:href="http://www.w3school.com.cn/xml/xml_syntax.asp">XML中的实体引用</link></para>
+        </tip>
+        <sect2 xml:id="example_programinglist"><title>programlisting代码</title>
+            <para></para>
+            <sect3 xml:id="example_programinglist_with_cdata"><title>带CDATA的programinglist示例</title>
+                <example xml:id="eg.programinglist_with_cdata"><title>举例：带CDATA的programinglist</title>
+                    <programlisting language="xml">
+<![CDATA[
+<programlisting language="c">
+<![CDATA[
+	for (setno = 0; setno < nr_sets; setno++, nmtd++) {
+		pr_debug("initialising set %d (%p, info %p)\n", setno, nmtd, info);
+		s3c2410_nand_init_chip(info, nmtd, sets);
+		nmtd->scan_res = nand_scan_ident(&nmtd->mtd,(sets) ? sets->nr_chips : 1);
+
+		if (nmtd->scan_res == 0) {
+			s3c2410_nand_update_chip(info, nmtd);
+			nand_scan_tail(&nmtd->mtd);
+			s3c2410_nand_add_partition(info, nmtd, sets);
+		}
+		if (sets != NULL)
+			sets++;
+	}
+]]>
+]]&gt;
+<![CDATA[
+</programlisting>
+]]>
+                    </programlisting>
+                </example>
+                <para>上述，就是由于<emphasis>programlisting</emphasis>的内容中出现了<emphasis>&amp;</emphasis>，<emphasis>&lt;</emphasis>，<emphasis>&gt;</emphasis>，才用<emphasis>&lt;![CDATA[</emphasis>和<emphasis>]]&gt;</emphasis>括起来的。</para>
+                <para></para>
+            </sect3>
+            <sect3 xml:id="example_programinglist_without_cdata"><title>不带CDATA的programinglist示例</title>
+                <example xml:id="eg.programinglist_without_cdata"><title>举例：不带CDATA的programinglist</title>
+                    <programlisting language="xml">
+<![CDATA[
+<programlisting language="c">
+	for (setno = 0; setno &lt; nr_sets; setno++, nmtd++) {
+		pr_debug("initialising set %d (%p, info %p)\n", setno, nmtd, info);
+		s3c2410_nand_init_chip(info, nmtd, sets);
+		nmtd-&gt;scan_res = nand_scan_ident(&amp;nmtd-&gt;mtd,(sets) ? sets-&gt;nr_chips : 1);
+
+		if (nmtd-&gt;scan_res == 0) {
+			s3c2410_nand_update_chip(info, nmtd);
+			nand_scan_tail(&amp;nmtd-&gt;mtd);
+			s3c2410_nand_add_partition(info, nmtd, sets);
+		}
+		if (sets != NULL)
+			sets++;
+	}
+</programlisting>
+]]>
+                    </programlisting>
+                </example>
+                <para>上述，就是由于<emphasis>programlisting</emphasis>的内容中出现了：<emphasis>&amp;</emphasis>，<emphasis>&lt;</emphasis>，<emphasis>&gt;</emphasis></para>
+                <para>所以才分别用：<emphasis>&amp;amp;</emphasis>，<emphasis>&amp;lt;</emphasis>，<emphasis>&amp;gt;</emphasis>，去替换的。</para>
+                <para></para>
+            </sect3>
+        </sect2>
+        <sect2 xml:id="example_screen"><title>screen屏幕输出</title>
+            <para><emphasis>screen</emphasis>适合用于表现：对于软件开发等过程中，屏幕输出信息之类的内容</para>
+            <sect3 xml:id="example_screen_with_cdata"><title>带CDATA的屏幕输出screen</title>
+                <example xml:id="eg.screen_with_cdata"><title>举例：带CDATA的screen</title>
+                    <programlisting language="xml">
+<![CDATA[
+        <para>查看单个的某个示例配置的核心参数，用：</para>
+        <screen>]]>&lt;![CDATA[<![CDATA[ct-ng show-<sample>]]>]]&gt;<![CDATA[</screen>
+]]>
+                    </programlisting>
+                </example>
+                <para>上述，就是由于<emphasis>screen</emphasis>的内容中出现了<emphasis>&lt;</emphasis>，<emphasis>&gt;</emphasis>，才用<emphasis>&lt;![CDATA[</emphasis>和<emphasis>]]&gt;</emphasis>括起来的。</para>
+                <para></para>
+            </sect3>
+            <sect3 xml:id="example_screen_without_cdata"><title>不带CDATA的屏幕输出screen</title>
+                <example xml:id="eg.screen_without_cdata"><title>举例：不带CDATA的screen</title>
+                    <programlisting language="xml">
+<![CDATA[
+        <para>查看单个的某个示例配置的核心参数，用：</para>
+        <screen>ct-ng show-&lt;sample&gt;</screen>
+]]>
+                    </programlisting>
+                </example>
+                <para>上述，就是由于<emphasis>screen</emphasis>的内容中出现了：<emphasis>&lt;</emphasis>，<emphasis>&gt;</emphasis></para>
+                <para>所以才分别用：<emphasis>&amp;lt;</emphasis>，<emphasis>&amp;gt;</emphasis>，去替换的。</para>
+                <para></para>
+            </sect3>
+        </sect2>
+
+    </sect1>
+
+    <sect1 xml:id="example_question_and_answer"><title>问题和回答</title>
+        <para>关于问题和解答，此处涉及到几个关键字：</para>
+        <itemizedlist>
+            <listitem>qandaset</listitem>
+            <listitem>qandaentry</listitem>
+            <listitem>question</listitem>
+            <listitem>answer</listitem>
+        </itemizedlist>
+        <para>下面直接列出相关示例代码：</para>
+                <example xml:id="eg.qanda_question_andswer"><title>举例：问题和解答qanda相关的示例代码</title>
+                    <programlisting language="xml">
+<![CDATA[
+<qandaset>
+
+    <qandaentry xml:id="qa.property_id_previously_used">
+        <question>
+            <para>ValidationException: Property ID xxx previously used</para>
+        </question>
+        <answer>
+            <screen>javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: Property ID "ref.ldr_syntax" (found on "fo:block") previously used; ID values must be unique within a document! (See position 1315:169)</screen>
+            <para>很常见的问题，即源码中，某个id的值，和之前的重复了。</para>
+            <para>常出现于，从别处拷贝了某段代码，然后修改完毕后，残留部分内容，导致其中有重复的id</para>
+            <para>解决办法：将重复的id删除或者改名</para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry xml:id="qa.not_a_valid_child">
+        <question>
+            <para>ValidationException: xxx is not a valid child of xxx</para>
+        </question>
+        <answer>
+            <screen>javax.xml.transform.TransformerException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}list-item" is not a valid child of "fo:block"! (See position 345:1605)</screen>
+            <para>错误的根本原因是：非正确地使用了某个标签。</para>
+            <para>比如某个元素不是另一个元素的子元素，但却由于不熟悉，而误用了。</para>
+            <para>但是具体的表现形式，那可能是多种多样的。</para>
+            <para>下面就简单列举一下，我所遇到过的错误的例子：</para>
+            <orderedlist>
+                <listitem>在callout中使用了qandaentry
+                    <para>结果导致此错误。然后去官网查了下：<link xl:href="http://www.docbook.org/tdg/en/html/qandaentry.html">qandaentry</link>，才得知，qandaentry的父标签，只包含三种：answer, qandadiv, qandaset。所以，此处在callout中使用qandaentry，肯定会出错了。</para>
+                    <para>解决办法：不使用该标签，或者换一个合法的位置使用该标签。</para>
+                </listitem>
+                <listitem>在part下，title和chapter之间，使用了para
+                    <para>结果导致报错：</para>
+                    <screen>org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"!</screen>
+                    <para>后来是删除了para，才去掉此错误的。</para>
+                    <para>详情参考：<link xl:href="http://www.crifan.com/fop_error_validationexception_block_not_a_valid_child_of_fo_root/">【已解决】org.apache.fop.apps.FOPException: org.apache.fop.fo.ValidationException: "{http://www.w3.org/1999/XSL/Format}block" is not a valid child of "fo:root"!</link></para>
+                </listitem>
+            </orderedlist>
+        </answer>
+    </qandaentry>
+
+</qandaset>
+]]>
+                    </programlisting>
+                </example>
+        <para></para>
+        <para></para>
+    </sect1>
+
+</chapter>

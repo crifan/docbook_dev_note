@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE chapter
+[
+
+<!ENTITY % crl_ent PUBLIC "crl.ent" 'http://www.crifan.com/files/res/docbook/entity/crl.ent'>
+%crl_ent;
+
+]>
+
+<chapter 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="ch01_build_env">
+
+<title>Windows下的Docbook的环境搭建</title>
+<abstract></abstract>
+    <sect1 xml:id="should_know_before_docbook"><title>搭建Docbook之前需要知道的最基本的事情</title>
+        <sect2 xml:id="our_target"><title>我们的目标</title>
+            <para>首先要清楚，我们想要得到什么。</para>
+            <para>我们想要得到的就是，写了符合Docbook规定的xml源文件之后，然后用工具可以生成多种格式的输出，此所谓”一种输入，多种输出“。</para>
+            <para>为了达到此目标，所以才要搭建一个docbook环境，配置一些东西，使用一些工具，将xml文件转换为HTML，PDF等多种格式。</para>
+            <para>简单的说，此时我们的目的就是，搭建一个最基本的Docbook环境，至少先支持这些基本的功能：</para>
+            <orderedlist>
+                <listitem>可以将Docbook的xml文件转换生成为HTML和PDF两种格式</listitem>
+                <listitem>支持中文字体</listitem>
+                <listitem>支持多个分割的（单独的）文件
+                    <para>此种情况主要适用于，当你写了一本内容很多的书籍的话，肯定有必要将其分为多个章节</para>
+                    <para>而每个章节，希望放在一个单独的xml文件中，然后用一个总的xml，将每个章节包含进来。</para>
+                    <para>此时，这多个独立的章节所对应的各个xml文件，就称为多个分割的（xml）文件</para>
+                </listitem>
+            </orderedlist>
+        </sect2>
+        
+        <sect2 xml:id="format_convert_knowledge"><title>关于格式转换方面的知识</title>
+            <para>将docbook的xml源码，转换为HTML，PDF等格式的话，有多种方法，其中涉及多种工具。</para>
+            <para>此处暂时不需要理会太多，只需要知道这两点即可：</para>
+            <orderedlist>
+                <listitem>如何得到HTMl
+                    <para>xsltproc可以将xml文件转换为HTML文件</para>
+                </listitem>
+                <listitem>如何获得PDF
+                    <para>xsltproc将xml转换为FO文件</para>
+                    <para>然后用fop将FO文件转换为PDF文件</para>
+                </listitem>
+            </orderedlist>
+            <para>下面要介绍的docbook的环境，也都是关于xsltproc和fop这两方面。</para>
+        </sect2>
+    </sect1>
+    
+    <sect1 xml:id="pure_win_docbook_dev_env"><title>纯Windows环境下的Docbook开发环境的搭建</title>
+        <important><title>docbook demo所有相关文件下载</title>
+            <para>和下面纯windows下docbook环境搭建有关的文件，可以在这里下载到：<link xl:href="http://crifan.com/files/res/docbook/demo/docbook5_demo_noTools.7z">docbook5_demo_noTools.7z</link></para>
+        </important>
+        <para>此处介绍如何在纯Windows环境下（即不需要额外安装Cygwin等），而搭建最基本的Docbook环境。</para>
+        <para>使得可以生成对应的HTML和PDF。</para>
+        <para>以下内容，主要参考：<link xl:href="http://easwy.com/blog/archives/a-simple-docbook-5-example/">一个简单的Docbook 5.0例子</link>和<link xl:href="http://easwy.com/blog/archives/install-apache-fop-on-windows/">在Windows上安装配置Apache FOP</link></para>
+        <para>此处之所以重新介绍一遍，主要目的在于，当前使用的fop 1.0的版本，可以省略关于fop字体设置的部分，以减少步骤。</para>
+        <para></para>
+        <sect2><title>建立好文件夹</title>
+            <para>为了以后更好的使用和扩展Docbook环境，所以此处专门设计了一个简单的架构。</para>
+            <para>即，不是为了演示，就随便糊弄一下。</para>
+            <para>下面的架构搭好之后，真正想要使用docbook的人，就可以在此基础上，一点点的扩展功能了。</para>
+            <para>当然，此处搭建的环境，也尽量的保持简洁，此处暂时只支持生成我们所需要的HTML和PDF。</para>
+            <para>下面就是要搭建的docbook环境所对应的文件夹结构</para>
+            <para>请自行在某个文件夹，比如我的是<filename class="directory">E:\DevRoot\docbook</filename>,下面建立对应的文件夹。</para>
+            <screenco>
+                <screen>
+books<co id="co.books" linkends="co.note.books" />
+    |
+    |-- docbook5_demo<co id="co.docbook5_demo" linkends="co.note.docbook5_demo" />
+            |
+            |-- output<co id="co.dir_output" linkends="co.note.dir_output" />
+            |   |
+            |   |-- fo<co id="co.fo" linkends="co.note.fo" />
+            |   |-- html<co id="co.html_pdf" linkends="co.note.html_pdf" />
+            |   |-- pdf<coref linkend="co.html_pdf" />
+            |
+            |-- src<co id="co.src" linkends="co.note.src" />
+
+config<co id="co.config" linkends="co.note.config" />
+    |
+    |-- docbook-xsl-ns-1.77.1<co id="co.xsl_ns_cfg" linkends="co.note.xsl_ns_cfg" />
+    |-- fop<co id="co.cfg_fop" linkends="co.note.cfg_fop" />
+
+tools
+    |
+    |-- docbook-xsl-ns-1.77.1<co id="co.xsl_ns_tool" linkends="co.note.xsl_ns_tool" />
+    |   |
+    |   |-- fo
+    |   |-- html
+    |   ...
+    |
+    |-- fop-1.0<co id="co.tool_fop" linkends="co.note.tool_fop" />
+    |   |
+    |   |-- build
+    |   |-- conf
+    |   |-- ...
+    |
+    |-- xslt<co id="co.tool_xslt" linkends="co.note.tool_xslt" />
+        |
+        |-- bin
+        |-- include
+        |-- lib
+                </screen>
+                <calloutlist>
+                    <callout id="co.note.books" arearefs="co.books" >
+                        <para>用于存放多个Docbook的book（书籍）</para>
+                        <para>后期扩展：可以建更多的book，比如我当前的关于docbook开发笔记，就可以对应新建一个docbook_dev_note的book了。</para>
+                    </callout>
+                    <callout id="co.note.docbook5_demo" arearefs="co.docbook5_demo" >
+                        <para>接下来所要写的docbook 5的demo的book</para>
+                    </callout>
+                    <callout id="co.note.dir_output" arearefs="co.dir_output" >
+                        <para>用于存放各种格式的输出。</para>
+                        <para>当前暂时为了演示，只建了fo，html，pdf</para>
+                        <para>后期扩展：可以建更多的文件夹，比如htmls，rtf，chm，txt等存放更多的输出格式</para>
+                    </callout>
+                    <callout id="co.note.fo" arearefs="co.fo" >
+                        <para>用于存放fo文件。其可以被fop等工具转换为PDF，RTF等格式</para>
+                    </callout>
+                    <callout id="co.note.html_pdf" arearefs="co.html_pdf" >
+                        <para>用于存放最终生成的html，pdf等格式的文件。这些，是我们所想要的最终的结果。</para>
+                    </callout>
+                    <callout id="co.note.src" arearefs="co.src" >
+                        <para>用与存放docbook的xml源码文件。</para>
+                        <para>后期扩展：当单个xml内容太多，可以考虑用xinclude分出多个xml文件，此时多个xml文件，都可以都放在此src文件夹下了。</para>
+                    </callout>
+                    <callout id="co.note.config" arearefs="co.config" >
+                        <para>用于存放所有的和Docbook相关的配置文件，包括xsl格式stylesheet文件，以及其他如fop的配置文件等。</para>
+                        <para>后期扩展：其他的，比如，实体定义entity，catalog等等一些内容，也可以放在此config下。</para>
+                    </callout>
+                    <callout id="co.note.xsl_ns_cfg" arearefs="co.xsl_ns_cfg" >
+                        <para>此处之所以文件夹叫做docbook-xsl-ns-1.77.1，是由于最新的stylesheet是1.77.1版本的。</para>
+                        <para>其作用是，设置对应的参数，可以控制html，pdf等输出的效果，包括显示效果方面的一些控制参数和输出内容格式组织方面的。</para>
+                    </callout>
+                    <callout id="co.note.cfg_fop" arearefs="co.cfg_fop" >
+                        <para>此处存放fop的配置。</para>
+                        <para>目前暂时只需要一个fop.xconf文件即可。</para>
+                    </callout>
+                    <callout id="co.note.xsl_ns_tool" arearefs="co.xsl_ns_tool" >
+                        <para>下载并解压docbook-xsl-ns-1.77.1，然后放到此处即可。</para>
+                        <para>如何下载docbook-xsl-ns-1.77.1参见<xref linkend="download_xsl_ns" /></para>
+                    </callout>
+                    <callout id="co.note.tool_fop" arearefs="co.tool_fop" >
+                        <para>下载fop 1.0并解压，放到此处即可。</para>
+                        <para>如何下载fop 1.0参见<xref linkend="download_fop" /></para>
+                    </callout>
+                    <callout id="co.note.tool_xslt" arearefs="co.tool_xslt" >
+                        <para>下载xsltproc及相关文件，并解压，放到此处即可。</para>
+                        <para>如何下载xsltproc及相关文件，参见<xref linkend="download_xsltproc_win" /></para>
+                    </callout>
+                </calloutlist>
+            </screenco>
+            <para>顺便贴出后来建立好的docbook环境的文件夹结构的截图：</para>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject role="html"><imagedata fileref="images/done_docbook_arch.png" align="left" scalefit="0" width="100%"/></imageobject>
+                    <imageobject role="fo"><imagedata fileref="images/done_docbook_arch.png" align="center" scalefit="1" width="100%"/></imageobject>
+                </mediaobject>
+            </informalfigure>
+            <para>安装上述介绍，建立好对应的文件夹后，就可以参考下面的步骤，下载相关文件，添加相关配置，编译生成html和pdf，然后最终搭建好docbook环境。</para>
+        </sect2>
+
+        <sect2 xml:id="download_xsltproc_win"><title>下载windos版本的xsltproc</title>
+            <para>在：<link xl:href="http://xmlsoft.org/xslt/index.html">xsltproc主页</link> &rArr; <link xl:href="http://xmlsoft.org/xslt/downloads.html">下载页面</link> &rArr; <link xl:href="http://www.zlatkovic.com/libxml.en.html">Libxml</link> &rArr; <link xl:href="ftp://ftp.zlatkovic.com/libxml/">Igor Zlatkovic提供的Windows下二进制版本的xsltproc</link>中，去下载：</para>
+            <orderedlist>
+                <listitem>xsltproc主程序
+                    <para><link xl:href="ftp://ftp.zlatkovic.com/libxml/libxslt-1.1.26.win32.zip">libxslt-1.1.26.win32.zip</link></para>
+                    <para>其中包含我们所需要的xsltproc可执行文件：<filename>xsltproc.exe</filename></para>
+                </listitem>
+                <listitem>运行xsltproc所需要的一些库
+                    <para>为了在windows下面运行xsltproc，还需要一些其所依赖的库：libxml2，iconv，zlib</para>
+                    <para>下面依次贴出下载地址和简单的解释：</para>
+                    <itemizedlist>
+                        <listitem><link xl:href="ftp://ftp.zlatkovic.com/libxml/libxml2-2.7.8.win32.zip">libxml2-2.7.8.win32.zip</link>
+                            <para>C语言实现的XML解析器。</para>
+                            <para>其支持N多规范或协议，比如XML，XML-NS，XPath，XPointer，XInclude，UTF-8/UTF-16，XML Catalog，Canonical XML，Relax NG等。</para>
+                        </listitem>
+                        <listitem><link xl:href="ftp://ftp.zlatkovic.com/libxml/iconv-1.9.2.win32.zip">iconv-1.9.2.win32.zip</link>
+                            <para>字符编码转换。比如从UTF-8转换为GB18030，就可以用iconv。</para>
+                        </listitem>
+                        <listitem><link xl:href="ftp://ftp.zlatkovic.com/libxml/zlib-1.2.5.win32.zip">zlib-1.2.5.win32.zip</link>
+                            <para>压缩工具。</para>
+                        </listitem>
+                    </itemizedlist>
+                </listitem>
+            </orderedlist>
+            <para>下载了这四个文件后，解压，然后都会得到一个包括bin，include，lib三个文件夹。</para>
+            <para>全部都合并到一起后，放到上述介绍的<xref linkend="co.tool_xslt">tools下面的xslt文件夹</xref>中，即可。</para>
+            <formalpara xml:id="add_xsltproc_into_path"><title>把xsltproc的路径添加到PATH环境变量中</title>
+            为了可以在windows的命令行cmd中直接输入xsltproc就可以执行，而不需要绝对路径，此处需要把xsltproc所在路径，我此处的的是：<filename class="directory">E:\DevRoot\docbook\tools\xslt\bin</filename>，添加到windows的环境变量PATH中去。</formalpara>
+            <tip xml:id="tip.how_set_win_env"><title>如何设置windows环境变量</title>
+                <para>关于如何添加相应路径到windows的环境变量中，不熟悉的可以参考：</para>
+                <para><link xl:href="http://www.crifan.com/files/doc/docbook/soft_dev_basic/release/html/soft_dev_basic.html#win_env_var">Windows的环境变量</link></para>
+            </tip>
+            <tip xml:id="tip.new_version_bins"><title>更新版本的xsltproc相关的二进制文件</title>
+                <para>如果想要用更新版本的xsltproc，即相关的各个所依赖的二进制文件，想要下载更新版本的话，</para>
+                <para>可以去参考：</para>
+                <para><link xl:href="http://www.crifan.com/cygwin_docbook_refer_local_file_must_use_file_colon_three_slash/">【已解决】docbook中用xsltproc处理xsl文件时用xsl:import引用本地css，js等文件时，必须加上file:///或file://的前缀才可以</link></para>
+                <para>中的"如何组合出来相对比较新的版本的xsltproc"即可。</para>
+            </tip>
+        </sect2>
+
+        <sect2 xml:id="download_xsl_ns"><title>下载docbook-xsl-ns-1.77.1</title>
+            <para>为了将xml源码转换为html，fo等文件的话，需要相应的配置文件，以控制输入的效果和格式，这就需要相应的配置文件。</para>
+            <para>此处的配置文件，就是xsl格式的stylesheet（样式表）。</para>
+            <para>docbook官方网站中，有对应的最新的办法的xsl样式表文件，是放在sourceforge上的：<link xl:href="http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/">最新的docbook-xsl-ns所在的页面</link></para>
+            <para>截止当前2012-06-10，最新版本的是<link xl:href="http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/1.77.1/">1.77.1版本的docbook-xsl-ns</link>，下载下来对应的<filename>docbook-xsl-ns-1.77.1.tar.bz2</filename>后，解压，放到上面刚建立的<xref linkend="co.xsl_ns_tool">tools下面的docbook-xsl-ns-1.77.1文件夹</xref>中</para>
+        </sect2>
+
+        <sect2 xml:id="download_fop_add_conf"><title>下载fop-1.0并添加fop配置文件</title>
+            <note xml:id="note.install_java_first"><title>如果没有安装java，请先安装java</title>
+                <para>fop的运行，依赖于java运行环境。</para>
+                <para>如果你的windows中，还没有安装java，请先安装java运行环境（JRE=java runtime environment）。</para>
+                <para>关于java的基本知识和如何安装，不了解的请参考：<link xl:href="http://www.crifan.com/files/doc/docbook/soft_dev_basic/release/html/soft_dev_basic.html#java">Java</link></para>
+                <para>java已经安装好前提下，另外记得确保JAVA_HOME环境变量已经正确设置好了。</para>
+                <para>比如，我的系统中的是：</para>
+                <screen>JAVA_HOME=D:\Program Files\Java\jre7</screen>
+            </note>
+            <sect3 xml:id="download_fop"><title>下载fop-1.0</title>
+                <para>从：<link xl:href="http://xmlgraphics.apache.org/fop/">fop主页</link> &rArr; <link xl:href="http://xmlgraphics.apache.org/fop/1.0/index.html">Apache&trade; FOP Version 1.0</link> &rArr; <link xl:href="http://xmlgraphics.apache.org/fop/download.html">fop下载页面</link> &rArr; <link xl:href="http://www.apache.org/dyn/closer.cgi/xmlgraphics/fop">FOP Distribution mirror</link>中，可以找到第一链接，是官网推荐给你的，然后进去后可以找到binaries文件夹，进去后，下载到fop-1.0-bin.tar.gz，比如我这里得到的地址是：<link xl:href="http://mirror.bjtu.edu.cn/apache/xmlgraphics/fop/binaries/fop-1.0-bin.tar.gz">bjtu的fop-1.0-bin.tar.gz</link></para>
+                <para>下载解压后，放到上面建的<xref linkend="co.tool_fop">tools下面的fop-1.0文件夹</xref>中即可。</para>
+            </sect3>
+            <sect3 xml:id="config_fop_home"><title>配置FOP的环境变量FOP_HOME</title>
+                <para>为了更好的让fop自动搜索对应的lib库，需要去设置fop的一个环境变量FOP_HOME。</para>
+                <para>此处即为，设置对应的环境变量为：</para>
+                <screen>FOP_HOME=E:\DevRoot\docbook\tools\fop-1.0</screen>
+            </sect3>
+            <sect3 xml:id="add_fop_xconf"><title>添加fop配置文件fop.xconf</title>
+                <para>将原先的<xref linkend="co.tool_fop">tools\fop</xref>中的conf文件夹中的<filename>fop.xconf</filename>拷贝一份出来，放到<xref linkend="co.cfg_fop">config\fop文件夹</xref>下</para>
+                <para>然后打开该文件，找到fop&rArr;renderers中的fonts部分，然后添加对应的配置，变成：</para>
+                <programlisting>
+<![CDATA[
+<fop version="1.0">
+    ...
+  <renderers>
+    <renderer mime="application/pdf">
+        ...
+      <fonts>
+        ...
+        
+        <!-- new added start -->
+         <!-- register all the fonts found in a directory and all of its sub directories (use with care) -->
+         <directory recursive="true">file:///c:/windows/fonts/</directory>
+
+         <!-- automatically detect operating system installed fonts -->
+         <auto-detect/>
+        <!-- new added end -->
+      </fonts>
+]]>
+                </programlisting>
+                <para>即完成了对应的配置。</para>
+                <tip xml:id="tip.fop_font"><title>关于FOP的字体配置</title>
+                    <para>关于fop的更多字体配置方面的内容，可以去参考官网的解释：<link xl:href="http://xmlgraphics.apache.org/fop/1.0/fonts.html#custom">Custom Fonts</link></para>
+                </tip>
+            </sect3>
+        </sect2>
+                
+        <sect2 xml:id="prepare_docbook_src_xml"><title>准备docbook的源码：xml文件</title>
+            <para>将如下内容：</para>
+            <programlisting>
+<![CDATA[
+<?xml version='1.0' encoding="utf-8"?>
+
+<book version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xml:lang="zh_CN"
+    >
+
+<info>
+    <title>Docbook5环境搭建演示</title>
+    <abstract>
+        <para>本文主要介绍了如何在纯Windows的环境下搭建Docbook 5开发环境</para>
+    </abstract>
+    
+    <author><personname><firstname>Crifan</firstname><surname>Li</surname></personname></author>    
+    <pubdate>2012-06-05</pubdate>
+    <copyright>
+        <year>2012</year>
+        <holder>Crifan</holder>
+        <holder><link xl:href="http://crifan.com" /></holder>
+    </copyright>
+    <legalnotice>
+        <para>本文章遵从：<link xl:href="http://creativecommons.org/licenses/by-nc/2.5/cn/">署名-非商业性使用 2.5 中国大陆(CC BY-NC 2.5)</link></para>
+    </legalnotice>
+</info>
+
+
+<chapter><title>第一章的标题</title>
+    <para>关于更多的Docbook方面的内容，可以去参考：<link xl:href="http://www.crifan.com/files/doc/docbook/docbook_dev_note/release/html/docbook_dev_note.html">Docbook开发手记</link></para>
+
+    <sect1><title>第一章第一小节的标题</title>
+        <para>可以在这里输入第一章第一小节中的内容</para>
+        
+        <sect2><title>第一章第二小节的标题</title>
+            <para></para>
+        </sect2>
+    </sect1>
+
+    <sect1><title>第一章第二小节标题</title>
+        <para></para>
+    </sect1>
+</chapter>
+
+<chapter><title>第二章</title>
+    <para></para>
+</chapter>
+
+</book>
+]]>
+            </programlisting>
+            <para>存为UTF-8编码的docbook5_demo.xml文件。</para>
+            <para>用于后期演示使用。</para>
+            <tip xml:id="tip.how_create_utf8_file"><title>如何建立UTF-8编码的文件</title>
+                <para>可以参考<link xl:href="http://www.crifan.com/files/doc/docbook/rec_soft_npp/release/htmls/npp_func_multi_enc.html">Notepad++的多种编码支持</link>，去用Notepad++建立相应的UTF-8编码的文件。</para>
+            </tip>
+        </sect2>
+                
+        <sect2 xml:id="from_xml_generate_html"><title>从xml生成html</title>
+            <sect3 xml:id="prepare_xml_config"><title>为生成html准备配置文件</title>
+                <para>将如下内容：</para>
+                <programlistingco>
+                    <programlisting language="xml">
+&lt;?xml version='1.0'?&gt;
+
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version='1.0'&gt;
+
+&lt;xsl:import href="E:/DevRoot/docbook<co id="co.xsl_parent_path" linkends="co.note.xsl_parent_path" />/tools/<co id="co.slash" linkends="co.note.slash" />docbook-xsl-ns-1.77.1/html/docbook.xsl"/&gt;
+
+&lt;!--=====================================&#x200B;=======================================
+font setting
+====================================================&#x200B;=========================--&gt;
+&lt;xsl:param name="title.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="body.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="monospace.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="symbol.font.family"&gt;Cambria Math&lt;/xsl:param&gt;
+
+&lt;!--====================================================&#x200B;========================
+TOC index setting
+====================================================&#x200B;=========================--&gt;
+&lt;xsl:param name="section.autolabel" select="1"/&gt;
+&lt;xsl:param name="section.label.includes.component.label" select="1"/&gt;
+&lt;xsl:param name="bibliography.numbered" select="1"/&gt;
+&lt;xsl:param name="toc.section.depth"&gt;8&lt;/xsl:param&gt;
+
+&lt;/xsl:stylesheet&gt;
+                    </programlisting>
+                    <calloutlist>
+                        <callout id="co.note.xsl_parent_path" arearefs="co.xsl_parent_path">
+                            <para>此处请自行将E:/DevRoot/docbook换为你自己当前的目录。</para>
+                        </callout>
+                        <callout id="co.note.slash" arearefs="co.slash">
+                            <para>注意，此处的路径中是正斜杠'/'，而不是反斜杠'\'，否则会导致xsltproc无法识别。</para>
+                        </callout>
+                    </calloutlist>
+                </programlistingco>
+                <para>存为UTF-8格式的docbook_html.xsl</para>
+                <para>放到前面建的<xref linkend="co.xsl_ns_cfg">config\docbook-xsl-ns-1.77.1文件夹</xref>中。</para>
+            </sect3>
+        
+            <sect3 xml:id="convert_xml_to_html"><title>将xml转换为html</title>
+                <para>将xml源码转换为html话，只需要用xsltrpoc一步操作就可以了：</para>
+                <para>打开windows的命令行cmd，切换到上面建的<xref linkend="co.src">books\docbook5_demo\<emphasis>src</emphasis>文件夹</xref>下</para>
+                <para>然后运行如下命令：</para>
+                <screen>xsltproc -o ../output/html/docbook5_demo.html E:\DevRoot\docbook\config\docbook_html.xsl docbook5_demo.xml</screen>
+                <para>即可生成相应的docbook5_demo.html</para>
+                <para>截图效果如下：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/generated_html_effect.png" align="left"   scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/generated_html_effect.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </informalfigure>
+            </sect3>
+        </sect2>
+        
+        <sect2 xml:id="from_xml_generate_pdf"><title>从xml生成pdf</title>
+            <sect3 xml:id="prepare_pdf_config"><title>为生成pdf准备配置文件</title>
+                <para>将如下内容：</para>
+                <programlisting language="xml">
+&lt;?xml version='1.0'?&gt;
+
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version='1.0'&gt;
+
+&lt;xsl:import href="E:/DevRoot/docbook/tools/docbook-xsl-ns-1.77.1/fo/docbook.xsl"/&gt;
+
+&lt;!--====================================================&#x200B;========================
+font setting
+====================================================&#x200B;=========================--&gt;
+&lt;xsl:param name="title.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="body.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="monospace.font.family"&gt;Microsoft YaHei&lt;/xsl:param&gt;
+&lt;xsl:param name="symbol.font.family"&gt;Cambria Math&lt;/xsl:param&gt;
+
+&lt;!--====================================================&#x200B;========================
+TOC index setting
+====================================================&#x200B;=========================--&gt;
+&lt;xsl:param name="section.autolabel" select="1"/&gt;
+&lt;xsl:param name="section.label.includes.component.label" select="1"/&gt;
+&lt;xsl:param name="bibliography.numbered" select="1"/&gt;
+&lt;xsl:param name="toc.section.depth"&gt;8&lt;/xsl:param&gt;
+
+&lt;!--====================================================&#x200B;========================
+misc setting
+====================================================&#x200B;=========================--&gt;
+&lt;!-- add bookmark and support more type of figure --&gt;
+&lt;xsl:param name="fop1.extensions"&gt;1&lt;/xsl:param&gt;
+
+&lt;!-- no indent for body content --&gt;
+&lt;xsl:param name="body.start.indent"&gt;0pt&lt;/xsl:param&gt;
+
+&lt;/xsl:stylesheet&gt;
+                </programlisting>
+                <para>存为UTF-8格式的docbook_fo.xsl</para>
+                <para>同理，不要忘了参考上面的<xref linkend="co.xsl_parent_path" />，把E:/DevRoot/docbook换为你自己当前的目录。</para>
+                <para>把docbook_fo.xsl放到前面建的<xref linkend="co.xsl_ns_cfg">config\docbook-xsl-ns-1.77.1文件夹</xref>中。</para>
+            </sect3>
+            
+            <sect3 xml:id="convert_xml_to_fo"><title>将xml转换为fo</title>
+                <para>同理，在<xref linkend="co.src">books\docbook5_demo\<emphasis>src</emphasis>文件夹</xref>下</para>
+                <para>用下列命令去生成fo：</para>
+                <screen>xsltproc -o ../output/fo/docbook5_demo.fo E:\DevRoot\docbook\config\docbook-xsl-ns-1.77.1\docbook_fo.xsl docbook5_demo.xml</screen>
+                <para>相应的屏幕输出为：</para>
+                <screen>
+E:\DevRoot\docbook\books\docbook5_demo\src>xsltproc -o ../output/fo/docbook5_demo.fo E:\DevRoot\docbook\config\docbook-xsl-ns-1.77.1\docbook_fo.xsl docbook5_demo.xml
+Making portrait pages on USletter paper (8.5inx11in)
+                </screen>
+            </sect3>
+            
+            <sect3 xml:id="convert_fo_to_pdf"><title>将fo转换为pdf</title>
+                <para>再继续执行下面命令：</para>
+                <screen>E:\DevRoot\docbook\tools\fop-1.0\fop.cmd -c E:\DevRoot\docbook\config\fop\fop.xconf -fo ../output/fo/docbook5_demo.fo -pdf ../output/pdf/docbook5_demo.pdf</screen>
+                <para>相应的屏幕输出为：</para>
+                <screen>
+E:\DevRoot\docbook\books\docbook5_demo\src>E:\DevRoot\docbook\tools\fop-1.0\fop.cmd -c E:\DevRoot\docbook\config\fop\fop.xconf -fo ../output/fo/docbook5_d
+ -pdf ../output/pdf/docbook5_demo.pdf
+六月 07, 2012 11:28:38 下午 org.apache.fop.apps.FopFactoryConfigurator configure
+信息: Default page-height set to: 11in
+六月 07, 2012 11:28:38 下午 org.apache.fop.apps.FopFactoryConfigurator configure
+信息: Default page-width set to: 8.26in
+六月 07, 2012 11:28:41 下午 org.apache.fop.hyphenation.Hyphenator getHyphenationTree
+严重: Couldn't find hyphenation pattern zh_cn
+                </screen>
+                <para>如此，就可以正常生成对应的pdf文件了，截图效果如下：</para>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/pdf_with_bookmark.png" align="left"   scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/pdf_with_bookmark.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/pdf_with_toc.png" align="left"   scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/pdf_with_toc.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </informalfigure>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/pdf_body_no_indent.png" align="left"   scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/pdf_body_no_indent.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </informalfigure>
+            </sect3>
+        </sect2>
+    </sect1>
+    
+    <sect1 xml:id="cygwin_docbook_dev_env"><title>Windows环境下的，基于Cygwin的Docbook开发环境的搭建</title>
+        <para>其实如果只是普通的用用docbook去写技术文档，那么上述的纯windows的docbook开发环境，即：</para>
+        <para><emphasis>xsltproc + fop + docbook-xsl-ns</emphasis></para>
+        <para>已经够用了，即对于普通的docbook开发者的话，看到此处，已经足够了。</para>
+        <para>但是如果你也是像我一样，需要用到写更多的技术文档，需要用makefile等去管理各个book的编译，去传递定制的参数给xsltproc</para>
+        <para>以及利用Linux下面的一些常用工具，去实现特定的需求的话，那么就要用到cygwin了。</para>
+        
+        <sect2 xml:id="install_cygwin"><title>安装Cygwin</title>
+            <para>关于什么是Cygwin和如何安装Cygwin，请参考：<link xl:href="http://www.crifan.com/files/doc/docbook/cygwin_intro/release/html/cygwin_intro.html">Cygwin</link></para>
+            <para>需要注意的是，安装时候，记得要选择以下几个库/模块：</para>
+            <orderedlist>
+                <listitem>xsltproc
+                    <para>用于将xml转换为HTML和FO等格式</para>
+                </listitem>
+                <listitem>xsltproc所依赖的一些库
+                    <para>xsltproc运行的话，需要依赖一些库，所以也要选上这些库。</para>
+                    <para>同时，后期的一些其他处理，比如编码转换等，也需要相关的像iconv等工具，所以要安装上这些工具，方便后期使用。</para>
+                    <itemizedlist>
+                        <listitem>libxml2</listitem>
+                        <listitem>zlib</listitem>
+                        <listitem>libxslt</listitem>
+                        <listitem>iconv</listitem>
+                    </itemizedlist>
+                </listitem>
+                <listitem>[docbook-xsl]
+                    <para>如前面<xref linkend="download_xsl_ns" />中的解释，为了生成各种格式的文件，是需要对应的xsl配置文件的。</para>
+                    <para>其实这部分配置文件，新版本的cygwin中，也有了，所以可以选择安装，也可以不安装：</para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>安装的话，就是选择对应的模块docbook-xsl</para>
+                            <para>安装的理由是，cygwin自带的xsl，其实版本已经够新了，也基本足够用了。而且总类也很多，包括docbook-xsl，docbook-xsl-ns等等。</para>
+                        </listitem>
+                        <listitem>
+                            <para>不安装的理由是，可以自己去按照前面的<xref linkend="download_xsl_ns" />一样去手动自己下载最新版本的，自己所需要的docbook-xsl。</para>
+                            <para>因为最新的版本，往往功能上更加全。</para>
+                        </listitem>
+                    </itemizedlist>
+                    <para>所以，是否安装此docbook-xsl的话，可以根据自己的需要决定。</para>
+                    <para>个人更加倾向于后者，自己手动下载最新版本的。</para>
+                </listitem>
+            </orderedlist>
+            <para>安装完毕cygwin后，可以查看对应的这些工具的版本等信息：</para>
+            <screen>
+CLi@PC-CLI-1 ~/develop/docbook/books/soft_dev_basic/src
+$ which xsltproc.exe
+/usr/bin/xsltproc.exe
+
+CLi@PC-CLI-1 ~/develop/docbook/books/soft_dev_basic/src
+$ xsltproc --version
+Using libxml 20708, libxslt 10126 and libexslt 815
+xsltproc was compiled against libxml 20708, libxslt 10126 and libexslt 815
+libxslt 10126 was compiled against libxml 20708
+libexslt 815 was compiled against libxml 20708
+            </screen>
+        </sect2>
+        
+        <sect2 xml:id="download_fop_for_cygwin"><title>下载cygwin下使用fop-1.0</title>
+            <para>按理来说，cygwin下，直接是可以正常使用1.0版本的fop的，但是后来遇到那个很多人都遇到的NoClassDefFoundError的问题。</para>
+            <para>所以，要在cygwin下使用fop-1.0之前，去解决掉此问题：</para>
+            <para>将fop中（大概是189行）的：</para>
+            <programlisting>LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`</programlisting>
+            <para>改为：</para>
+            <programlisting>
+#LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
+# for cygpath has bug, so use follow workaround
+# edit by admin AT crifan DOT com
+LCP_TEMP=`cygpath --path --$format "$LOCALCLASSPATH"`
+LCP_TEMP=`cygpath --path --unix "$LCP_TEMP"`
+            </programlisting>
+            <para>详情参看：<link xl:href="http://www.crifan.com/fop_java_lang_noclassdeffounderror_xmlgraphics_cygpath_bug_path_truncated/">【终极解决】fop错误：Exception in thread "main" java.lang.NoClassDefFoundError:org/apache/xmlgraphics/image/loader/ImageContext 的终极解决办法，即cygpath有bug，转换路径出错，导致部分路径被截断</link></para>
+        </sect2>
+    </sect1>
+</chapter>

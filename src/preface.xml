@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<!DOCTYPE preface>
+
+<preface 
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    
+    xml:id="preface">
+<title>Docbook介绍</title>
+
+<sect1 xml:id="what_is_docbook"><title>什么是Docbook</title>
+    <sect2 xml:id="background_docbook_come"><title>Docbook出现的背景</title>
+        <para>想要了解Docbook是啥之前，需要知道一下其出现的大概背景，这样才能更好的理解为何会有docbook，以及其到底是啥。</para>
+        <para>随着计算机发展，有很多专业的书籍，技术文章等，需要发布。</para>
+        <para>这句话需要解释一下：</para>
+        <itemizedlist>
+            <listitem>专业的书籍，技术文章
+                <para>此处所说的书籍book和文章article，主要指的是和计算机相关的</para>
+                <para>当然后面也会提到，docbook的应用，不仅仅局限于发布计算机相关的书籍和文章。</para>
+                <para>即，其他专业，方向的书籍和文章等，也都可以通过docbook发布。</para>
+            </listitem>
+            <listitem>发布
+                <para>此处的发布，主要包括两种，一种是在线Online的，一种是离线的Offline的。</para>
+                <para>在线的，多指的是文章通过HTML等网页形式，可以在线浏览。</para>
+                <para>离线的，也可以是将HTML网页下载下来留作本地阅读，更多的时候指的是，发布为PDF，CHM等格式，方便本地打开对应的文件，阅读该书籍或文章。</para>
+            </listitem>
+        </itemizedlist>
+        <para>而对于各种书籍和文章的发布，由于没有统一的系统支持，导致想要发布多种格式，多人同时编辑同一份文档等情况的时候，之前的直接编辑生成相应文档的方法，就显得力不从心了。</para>
+        <para>所以才会有Docbook这种东西出现。其统一规划了（尤其是计算机类的）书籍所需要的“单词”，以及规定了“单词”之间的关系，</para>
+        <para>作为文档发布者，按照其规定，写好相应的<emphasis>源码</emphasis></para>
+        <para>之后，有其他第三方（多数是开源的，免费的）工具，实现格式的定义，再转换为多种格式。</para>
+        <para>而在写<emphasis>源码</emphasis>期间，由于是直接写的xml或sgml等文件，属于文本类的文件，所以可以很方便的实现版本的控制，由此实现了<xref linkend="docbook_pros" /></para>
+    </sect2>
+    
+    <sect2 xml:id="what_is_the_docbook"><title>Docbook是什么</title>
+        <para>根据<link xl:href="http://www.docbook.org/whatis">Docook官网的解释</link>，Docbook是一种schema。</para>
+        <para>schema，中文一般翻译为<emphasis>模式</emphasis>，但是如此解释，还是很抽象，很难理解。</para>
+        <tip xml:id="tip.about_schema"><title>关于Schema</title>
+            <itemizedlist>
+                <listitem>关于DTD和XML Schema之间的区别，可以参看w3cschool的解释：<link xl:href="http://www.w3school.com.cn/schema/schema_howto.asp">DTD vs XML Schema</link></listitem>
+                <listitem>关于RELAX NG，可以参看wiki中的举例说明：<link xl:href="http://en.wikipedia.org/wiki/RELAX_NG#XML_syntax">RELAX NG - XML syntax</link></listitem>
+            </itemizedlist>
+        </tip>
+        <para>此处，可以简单的将Docbook理解为，类似于某种语言，比如英语。</para>
+        <para>英语，包括了对应的单词，词汇，以及对应的语法，规定了单词和词汇之间的关系，如何使用它们才是正确的。</para>
+        <para>对应的Docbook，也规定了一堆基本的<emphasis>单词</emphasis>和相应的<emphasis>语法</emphasis>。</para>
+        <orderedlist>
+            <listitem><emphasis>Docbook中的<emphasis>单词</emphasis> == 元素(Element)</emphasis>
+                <para>Docbook中的<emphasis>单词</emphasis>，被称为元素（elment），比如最常见的book，chapter，section等。</para>
+            </listitem>
+            <listitem><emphasis>Docbook的中<emphasis>语法</emphasis> == 用其他语言（Relax NG/SGML/XML DTDs/W3C XML Schema）来解释</emphasis>
+                <para>Docbook中各个元素之间的关系，是Docbook规定好的。</para>
+                <para>此所谓的规定，就是用某种方法，解释出来，并且要解释的清楚易懂。</para>
+                <para>而直接用文字去描述的话，比如book下面可以嵌套多个chapter，chapter下面可以有多个section等，</para>
+                <para>首先真容易把Docbook的人累死，因为单纯用文字描述清楚如此复杂的关系，真的需要太多文字的解释。</para>
+                <para>其次，用纯文字描述，语义上不是足够明确。</para>
+                <para>而计算机领域内，有对应的，专门用于描述，类似于Docbook中的各个“单词”之间的关系的语言。</para>
+                <para>而Docbook就是采用他们，来解释清楚，Docbook中有哪些元素，以及这些元素之间的关系又是啥样的。</para>
+                <para>目前已经实现了的，包括Relax NG，SGML，XML DTDs，W3C XML Schema</para>
+                <para>通过如此描述，可以简介而精确的描述出Docbook的内容，即有哪些元素和元素之间的关系。</para>
+                <tip xml:id="dtd_xml_schema_looklike"><title>到底这些描述语言，比如DTD，XML Schema等，都是啥样子的</title>
+                    <para>关于到底这些描述语言，都长的啥样子的，都是如何工作的，可以去看：<link xl:href="http://www.w3school.com.cn/schema/schema_howto.asp">DTD  vs XML Schema</link></para>
+                    <para>看完后，就可以大概的了解到，这些描述语言，是怎么回事了。</para>
+                </tip>
+                <para>而对于具体的更多的描述语言的细节，作为Docbook使用者来说，我们可以不必太关心。</para>
+                <para>我们需要关心的是，docbook中有哪些元素，以及他们之间的关系。然后如何去正确的使用它们。</para>
+            </listitem>
+        </orderedlist>
+        <para>所以，简单总结可以理解为：</para>
+        <para><emphasis>Docbook是一种模式，其规定了包括哪些元素以及这些元素之间的关系。</emphasis></para>
+        <para>而包含的元素以及元素之间的关系，是用对应的Schema Language去描述的。</para>
+        <para>目前已经Docbook实现了的Schema Language有：Relax NG，SGML，XML DTDs，W3C XML Schema</para>
+        <para><emphasis>Docbook（虽然不仅仅只支持这些，但是）更加适用于计算机（软件和硬件）相关的书籍和文章。</emphasis></para>
+        <para><emphasis>Docbook的&lt;=4.5的版本，很多都是用SGML语言书写Docbook源码的，现在已不再推荐。</emphasis></para>
+        <para><emphasis>Docbook最新版本是5.0。推荐使用XML语言书写Docbook的源码。</emphasis></para>
+        
+        <sect3 xml:id="screenshot_docbook_one_in_multi_out"><title>截图说明Docbook的：一种（xml）格式输入，多种（html，htmls，chm，pdf，txt，rtf等等）格式输出</title>
+            <para><xref linkend="what_is_docbook" />中虽然用文字解释了什么是Docbook，但是还是不够直观。</para>
+            <para>所以，此处专门通过截图来给不熟悉的人具体解释解释，Docbook长啥样，以及什么是一种输入，多种输出。</para>
+
+            <sect4 xml:id="docbook_on_in_xml"><title>Docbook的一种输入：xml源码（文件）</title>
+                <para>Docbook的xml源码，就是常见的xml文件。</para>
+                <para>比如<xref linkend="fg.docbook_xml_src"/>中的这段Docbook的xml源码，就是很常见的xml文件而已。</para>
+                <figure xml:id="fg.docbook_xml_src"><title>截图举例：Docbook的XML源码</title>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/docbook_xml_src_1.png" align="left" scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo"><imagedata fileref="images/docbook_xml_src_1.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/docbook_xml_src_2.png" align="left"   scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo">  <imagedata fileref="images/docbook_xml_src_2.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </figure>
+            </sect4>
+            
+            <sect4 xml:id="docbook_multi_out"><title>Docbook的多种输出：HTML，HTMLs，PDF，CHM，RTF，TXT，WEBHELP等格式</title>
+                <para>上述的<xref linkend="fg.docbook_xml_src"/>，可以通过工具，将其转换为多种输出格式。</para>
+                <para>我目前暂时只实现了其中的7种格式：</para>
+                <figure xml:id="fg.docbook_multi_format"><title>截图举例：Docbook的可以生成多种格式</title>
+                    <mediaobject>
+                        <imageobject role="html"><imagedata fileref="images/docbook_multi_format_total_seven.png" align="left" scalefit="0" width="100%"/></imageobject>
+                        <imageobject role="fo"><imagedata fileref="images/docbook_multi_format_total_seven.png" align="center" scalefit="1" width="100%"/></imageobject>
+                    </mediaobject>
+                </figure>
+                <para>下面分别简单介绍一下每种格式：</para>
+                <itemizedlist>
+                    <listitem>HTML
+                        <para>单一HTML网页</para>
+                        <para>包含了所有的内容</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的HTML网页的效果：</para>
+                        <figure xml:id="fg.docbook_html"><title>截图举例：Docbook的XML源码生成的HTML</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_html_with_css.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_html_with_css.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>HTMLs
+                        <para>多个HTML页面</para>
+                        <para>每个章（甚至小节）都是一个单个的HTML网页</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的HTMLs网页的效果：</para>
+                        <figure xml:id="fg.docbook_htmls"><title>截图举例：Docbook的XML源码生成的HTMLs</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_htmls_with_navigation.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_htmls_with_navigation.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>PDF
+                        <para>PDF文档</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的PDF的效果：</para>
+                        <figure xml:id="fg.docbook_pdf"><title>截图举例：Docbook的XML源码生成的PDF</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_pdf_with_bookmark.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_pdf_with_bookmark.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>CHM
+                        <para>docbook对应的是htmlhelp类型</para>
+                        <para>生成的是微软的chm帮助文件</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的CHM的效果：</para>
+                        <figure xml:id="fg.docbook_chm"><title>截图举例：Docbook的XML源码生成的CHM</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_chm_builtin_css.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_chm_builtin_css.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>TXT
+                        <para>纯文本格式</para>
+                        <para>是用工具从HTML网页转换出来的</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的TXT的效果：</para>
+                        <figure xml:id="fg.docbook_txt"><title>截图举例：Docbook的XML源码生成的TXT</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_txt_utf8.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_txt_utf8.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>RTF
+                        <para>RTF文档，和word兼容</para>
+                        <para>可以用微软的word软件打开</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的RTF的效果：</para>
+                        <figure xml:id="fg.docbook_rtf"><title>截图举例：Docbook的XML源码生成的RTF</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_rtf_effect.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_rtf_effect.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                    <listitem>WEBHELP
+                        <para>Webhelp格式</para>
+                        <para><xref linkend="fg.docbook_xml_src"/>所生成的WEBHELP的效果：</para>
+                        <figure xml:id="fg.docbook_webhelp"><title>截图举例：Docbook的XML源码生成的WEBHELP</title>
+                            <mediaobject>
+                                <imageobject role="html"><imagedata fileref="images/docbook_webhelp_with_css.png" align="left" scalefit="0" width="100%"/></imageobject>
+                                <imageobject role="fo"><imagedata fileref="images/docbook_webhelp_with_css.png" align="center" scalefit="1" width="100%"/></imageobject>
+                            </mediaobject>
+                        </figure>
+                    </listitem>
+                </itemizedlist>
+                <para>其他docbook还可以生成其他格式，比如website，slide，roundtrip，manpage，xhtml，epub，javadoc，eclipse help等，此处暂时没有去弄而已。</para>
+                <para>通过上述截图的介绍，相信即使不熟悉的人，也大概知道docbook是个什么东西了。</para>
+            </sect4>
+        </sect3>
+    </sect2>
+</sect1>
+
+<sect1 xml:id="why_use_docbook"><title>我为何选择Docbook</title>
+    <para>主要是之前写的不少帖子，都是用word编辑，然后转换为PDF后发布的，但是此法存在几个问题</para>
+    <orderedlist>
+        <listitem>转换后的PDF不完美
+            <para>此处说的不完美，不是表面看上去的效果不好，而是pdf本身内部所包含的内容，有点瑕疵。</para>
+            <para>主要是，当你选择一些内容，然后拷贝出来，粘贴到别的地方，比如word中，你会发现，几乎每一行的内容，都是对应的两行，第二行是重复第一行的，而且拷贝出来的内容，格式也是很乱的。</para>
+            <para>这让我很不爽，因为我要追求的是完美的效果，即你用Word 2007/2010导出的PDF，也应该是在内部的内容和格式上，都是和原先word一致的才对。</para>
+            <para>所以，后来有机会知道了Docbook，才决定不用word了</para>
+        </listitem>
+        
+        <listitem>word的不爽
+            <itemizedlist>
+                <listitem>稳定性
+                    <para>word作为基本的文字编辑工具，总体上来说，还是挺不错的，至少对于多数人如此。</para>
+                    <para>而对于我，有时候会遇到单个word文件，包含内容太多，比如99页，而遇到过，在编辑过程中偶尔死掉，导致差点丢失了一些已经编辑的内容。</para>
+                    <para>需要说明的是，我对于使用word和其他工具，已经养成了够好的习惯了，因为是编辑了任何地方，都是顺便Ctrl+S去保存一下的。保证不会出现由于没有及时保存而丢失内容的情况。</para>
+                    <para>但是对于上述所说的word的偶尔死掉而导致文件内容丢失的可能性，却是无法排除的。</para>
+                    <para>所以，还是觉得不太靠谱。</para>
+                </listitem>
+                
+                <listitem>兼容性
+                    <para>微软的东西，兼容性已经做得足够好了，包括Office系列工具中的word</para>
+                    <para>但是对于之前使用word所遇到的情况，比如2003，2007,和2010等的兼容程度，以及从长远来看，都无法排除，用之前某个版本的word写的东西，无法用新的版本正常打开，且完全兼容旧版本，完全保留之前的所有的内容和设置。</para>
+                    <para>所以，保险起见，还是换用Docbook等xml源码的形式，不用担心在未来任何时刻，都可以完整的打开原始文档，保留所有原始内容和设置。</para>
+                </listitem>
+                
+                <listitem>格式排版
+                    <para>如果只是写写一般短内容的帖子和文章，word的格式，排版等功能，算是非常好用的了。</para>
+                    <para>但是如果是写的内容非常多，涉及到各个部分的格式调整，即使用了word的模板去统一格式，也显得很繁琐。</para>
+                    <para>因此，内容比较多的话，用word去写，而且还要统一风格和设置，就显得效率比较低了。此时，换用Docbook等，就是很好的选择了。</para>
+                </listitem>
+            </itemizedlist>
+        </listitem>
+
+        <listitem>发布格式单一
+            <para>之前的做法，都是用word写好，然后再转换为PDF。而新的2007/2010的word，支持直接导出PDF，而且已经支持页内链接，标签等（详见之前的帖子：<link xl:href="http://www.crifan.com/order_make_pdf_file_to_keep_the_original_word_document_page_links_and_hyperlinks_&#x200B;within_the_common_pdf_printer__installation_method_introduction/">【整理】制作pdf文件后，保持原先word文档中的页内链接和超链接+常见pdf打印机安装使用方法简介</link>），已经算是蛮方便的了，但是还是只能发布PDF一种格式。</para>
+            <para>而发布PDF格式的文件，好处是利于下载阅读，而且无法更改原文内容，坏处是无法方便的拷贝粘贴所需要的内容，不利于内容的传播和分享。</para>
+            <para>因此，希望支持更多的格式，尤其是在线的HTML页面。</para>
+            <para>而后来自从知道了Docbook，才发现，终于找到了我所想要的，同样的原文内容（xml源码），可以支持多种格式发布，至少包括HTML和PDF，这样就方便发布文章，利于文章内容传播了。</para>
+        </listitem>
+    </orderedlist>
+    <para>然后就是遇到了Docbook，基本上完美解决了我之前的所有问题，相对有很多好处：</para>
+    <formalpara xml:id="docbook_pros"><title>Docbok的优点</title>
+        <orderedlist>
+            <listitem>一种输入，多种输出
+                <para>这个优点，对于我来说，是最看重的。</para>
+                <para>即，写任何帖子，文章，的时候，只需要写好对应的xml源码，然后用已经搭建好的环境，编译生成多种格式。</para>
+                <para>我目前已经搭建好的环境，是在Windows下面的Cygwin，已经自己写好了Makefile，这样，每次写完xml源码，直接make，就可以生成多种版本了，目前已经实现的有：单个的HTML网页文件，多个的HTML网页文件，PDF，RTF（即word文档，用word可以直接打开和编辑的），TXT的纯文本文件，微软的帮助文件CHM</para>
+                <para>这样，就方便了文章以多种格式发布，和统一设置各种风格（显示效果）了。</para>
+                <para>此所谓，一种输入，多种输出。</para>
+            </listitem>
+            
+            <listitem>可以实现版本控制
+                <para>关于版本控制这一点，前面说word的缺点的时候，其实都没提到。那是因为此处我对写的帖子的版本控制，需求还不是特别高。</para>
+                <para>但是的确，对于更加专业的人员，多人协作写同一本书，这种时候，版本控制，就显得尤为重要了。</para>
+                <para>Docbook是原始输入，就是xml源码，都属于普通的文本Plain Text，所以很方便使用SVN等版本控制工具，对齐实现版本控制。</para>
+                <para>这样，任何时候的任何改动，都可以实现追溯和管理了。</para>
+            </listitem>        
+        </orderedlist>
+    </formalpara>
+    <para>当然，相对来说，Docbook，至少对于我来说，也有一些缺点：</para>
+    <formalpara xml:id="docbook_cons"><title>Docbok的缺点</title>
+        <orderedlist>
+            <listitem>前期的入门有点难
+                <para>此处所说的Docbook入门，指的是两方面</para>
+                <itemizedlist>
+                    <listitem>搞懂Docbook是啥，有点难
+                        <para>之前是一直多Docbook是啥，没太搞懂。</para>
+                        <para>其实现在也不是完全清楚，因为想彻底搞清楚，得多花时间去搞懂很多概念，包括DTD，Schema等等。</para>
+                        <para>不过，想要达到基本了解，够用，其实也就行了。更复杂的东西，可以在折腾的过程中去多了解了解。</para>
+                    </listitem>
+                    <listitem>真正完全把Docbook的环境搭建好，也不容易
+                        <para>其实折腾完毕后，才知道，想要搭建最基本的Docbook环境，能生成HTML和PDF，对于Docbook 5，其实并不难。</para>
+                        <para>但是对于之前最开始接触的那个Docbook 4.5以及之前版本，其实还是蛮麻烦的。</para>
+                        <para>然后搭建了最基本的Docbook 5的环境，在继续定制自己的配置，是需要一点点学习，了解，才能搞定如何配置的。还是需要花些精力的。</para>
+                        <para>当前，搭建好了自己的Docbook开发环境后，以后写完帖子的发布工作，那就简单了，直接Make或者输入命令，实现转换即可。</para>
+                    </listitem>
+                </itemizedlist>
+            </listitem>
+            
+            <listitem>缺少所见即所得(WYSIWYG)
+                <tip xml:id="tip.wysiwyg"><title>WYSIWYG</title>
+                    <para>WYSIWYG是What You See Is What You Get的缩写。</para>
+                    <para>意思很清楚，就是，你所看到的，就是你所得到的。</para>
+                    <para>我们常见的微软的很多工具，包括word，就属于WYSIWYG，因为你是在编辑word文档的时候，所看到的内容，即除了本身输入的文字之外，还有那些已经设置好了的字体，颜色，排版等，都是和你最终所得到的结果，即你再次打开或别人拿到你的word文件去打开，所看到的效果是一样的。所以称，所见即所得。</para>
+                </tip>
+                <para>Docbook本身的核心就在于，非所见即所得，内容和形式（显示）分开，即你所输入的文章的内容，都是在xml源码中，而具体对应的这些内容的显示效果，都是由相关的配置文件和参数，有工具转换后，才能看到具体显示效果的。即本身就不是所见即所得的。</para>
+                <para>而此处之所以把WYSIWYG列为Docbook的缺点之一，就是因为我们很多人，习惯了微软的Word等所见即所得的环境，突然换成了内容与显示效果分开的Docbook的环境，还真的需要一段时间的适应。</para>
+                <para>另外，至于我自己，有时候，也的确想要去控制某些内容的显示效果，而无法很方便的配置出来，的时候，也偶尔会觉得，Docbook（加上配置文件和转换工具）在（所得到的）显示效果方面，的确是没有word方便。</para>
+                <para>举个例子，就比如我想要源码高亮显示，目前所能找到的资料，除了官网的解释，是除了需要开启相应高亮的参数配置之外，还要添加相应extension，然后还需要是Saxon等环境和工具才可以，对于我所用的xsltproc+fop，竟然还不支持，所以很悲催的暂时放弃了代码高亮的功能。详见：<ulink url="http://www.crifan.com/docbook_highlight_code_for_programlisting_using_xsltproc_fop/">【已放弃】给Docbook中代码programlisting实现高亮显示</ulink></para>
+                <para>不过总的来说，类似于这些显示效果的控制方面，即使有时候没法实现或者不方便实现，在可以保证内容完整的前提下，没了这些效果，基本也是可以接受的。</para>
+            </listitem>
+        </orderedlist>
+    </formalpara>
+</sect1>
+
+</preface>
